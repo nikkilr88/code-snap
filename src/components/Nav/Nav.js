@@ -4,10 +4,11 @@ import ColorPicker from '../ColorPicker'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload } from '@fortawesome/free-solid-svg-icons'
+import { faTwitter } from '@fortawesome/fontawesome-free-brands'
 
 class Nav extends Component {
   render() {
-    const { color, changeColor, changeTheme, saveSnap } = this.props
+    const { color, changeColor, changeTheme, saveSnap, sendSnap } = this.props
     return (
       <nav className="nav">
         <p className="logo">
@@ -15,8 +16,13 @@ class Nav extends Component {
         </p>
         <ThemePicker changeTheme={changeTheme} />
         <ColorPicker color={color} changeColor={changeColor} />
-        <button onClick={saveSnap}>
+        <button className="save-snap" onClick={saveSnap}>
           <FontAwesomeIcon className="font-awesome" icon={faDownload} />
+        </button>
+
+        <button className="share-twitter" onClick={sendSnap}>
+          <FontAwesomeIcon className="font-awesome" icon={faTwitter} />
+          Share
         </button>
       </nav>
     )

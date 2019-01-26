@@ -27,15 +27,22 @@ class CodeWrapper extends Component {
       theme: theme
     }
 
+    const bgColor = {
+      background: color
+    }
     return (
-      <div style={{ background: color }} className="code-wrapper">
-        <CodeMirror
-          value={this.props.codeText}
-          options={options}
-          onBeforeChange={(editor, data, value) => {
-            handleOnChange(value)
-          }}
-        />
+      <div className="transparent">
+        <div style={bgColor} className="cover" />
+        <div style={bgColor} className="cover2" />
+        <div style={bgColor} className="code-wrapper">
+          <CodeMirror
+            value={this.props.codeText}
+            options={options}
+            onBeforeChange={(editor, data, value) => {
+              handleOnChange(value)
+            }}
+          />
+        </div>
       </div>
     )
   }

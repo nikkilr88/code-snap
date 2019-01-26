@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import CodeWrapper from '../CodeWrapper'
 import Nav from '../Nav'
+import axios from 'axios'
 
 // Lib
 import domtoimage from 'dom-to-image'
@@ -10,9 +11,9 @@ import './App.css'
 
 class App extends Component {
   state = {
-    color: '#3498db',
+    color: '#34495e',
     theme: 'monokai',
-    codeText: '//Pssst... Paste your code here'
+    codeText: '// Pssst... Paste your code here'
   }
 
   handleOnChange = val => {
@@ -26,7 +27,6 @@ class App extends Component {
 
   changeTheme = e => {
     const { name, value } = e.target
-
     this.setState(() => ({ [name]: value }))
   }
 
@@ -41,6 +41,31 @@ class App extends Component {
       })
   }
 
+  sendSnap = () => {
+    const wrapper = document.querySelector('.transparent')
+    domtoimage
+      .toBlob(wrapper, {
+        style: { margin: '0' }
+      })
+      .then(function(blob) {
+        const formData = new FormData()
+        formData.append('upl', blob)
+
+        fetch('https://beautiful-pig.glitch.me/', {
+          method: 'POST',
+          body: formData
+        })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data)
+            window.open(
+              `https://twitter.com/intent/tweet?text=${data.imageURL}`
+            )
+          })
+          .catch(err => console.log(err))
+      })
+  }
+
   render() {
     return (
       <Fragment>
@@ -49,6 +74,7 @@ class App extends Component {
           changeColor={this.changeColor}
           changeTheme={this.changeTheme}
           saveSnap={this.saveSnap}
+          sendSnap={this.sendSnap}
         />
 
         <CodeWrapper

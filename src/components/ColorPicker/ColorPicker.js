@@ -21,7 +21,6 @@ class ColorPicker extends Component {
 
   togglePicker = e => {
     const clickOut = !e.target.classList.contains('selected')
-
     const colorClick = e.target.classList.contains('option')
 
     this.setState(prevState => ({

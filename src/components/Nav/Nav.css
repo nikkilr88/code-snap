@@ -19,16 +19,24 @@
 }
 
 button {
-  margin: 0 15px;
+  margin: 0 5px;
   padding: 10px 20px;
   height: 40px;
   border: none;
-  background: #e74c3c;
-  color: #fff;
   font-weight: bold;
   border-radius: 100px;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+}
+
+.save-snap {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.share-twitter {
+  background: #00acee;
+  color: #fff;
 }
 
 label {

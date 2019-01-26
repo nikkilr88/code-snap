@@ -15,13 +15,40 @@
 }
 
 .code-wrapper {
+  padding: 50px;
+}
+
+.transparent {
+  padding: 1px;
+  background: transparent;
   position: relative;
   left: 0;
   right: 0;
   margin: 100px auto;
   color: #fcfcfc;
-  padding: 50px;
   width: auto;
   max-width: 700px;
   display: table;
+}
+
+/* 
+  Cover transparent background to only leave one transparent pixel 
+  Avoid JPG compression on Twitter
+*/
+.cover {
+  position: absolute;
+  content: '';
+  height: 100%;
+  width: 100%;
+  right: 0;
+  bottom: 1px;
+}
+
+.cover2 {
+  position: absolute;
+  content: '';
+  height: 100%;
+  width: 100%;
+  right: 1px;
+  bottom: 0;
 }

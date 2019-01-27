@@ -36131,136 +36131,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _default = _ThemePicker.default;
 exports.default = _default;
-},{"./ThemePicker":"src/components/ThemePicker/ThemePicker.js","./ThemePicker.css":"src/components/ThemePicker/ThemePicker.css"}],"src/components/ColorPicker/ColorPicker.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireWildcard(require("react"));
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var ColorPicker =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(ColorPicker, _Component);
-
-  function ColorPicker() {
-    var _getPrototypeOf2;
-
-    var _this;
-
-    var _temp;
-
-    _classCallCheck(this, ColorPicker);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(ColorPicker)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
-      showPicker: false,
-      colors: ['#3498db', '#2980b9', '#2ecc71', '#16a085', '#e74c3c', '#c0392b', '#34495e', '#2c3e50', '#8e44ad', '#333333', '#000000', '#ffffff']
-    }, _this.togglePicker = function (e) {
-      var clickOut = !e.target.classList.contains('selected');
-      var colorClick = e.target.classList.contains('option');
-
-      _this.setState(function (prevState) {
-        return {
-          showPicker: colorClick ? true : clickOut ? false : !prevState.showPicker
-        };
-      });
-    }, _temp));
-  }
-
-  _createClass(ColorPicker, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      document.addEventListener('click', this.togglePicker, false);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      document.removeEventListener('click', this.togglePicker, false);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this$props = this.props,
-          color = _this$props.color,
-          changeColor = _this$props.changeColor;
-      var colors = this.state.colors.map(function (color, i) {
-        return _react.default.createElement("span", {
-          className: "color option",
-          key: i,
-          "data-color": color,
-          style: {
-            background: color
-          },
-          onClick: changeColor
-        });
-      });
-      return _react.default.createElement("div", {
-        className: "color-picker-wrapper"
-      }, _react.default.createElement("label", null, "Background:", _react.default.createElement("div", {
-        className: "color selected",
-        style: {
-          background: color
-        }
-      })), this.state.showPicker && _react.default.createElement("div", {
-        className: "color-picker"
-      }, colors));
-    }
-  }]);
-
-  return ColorPicker;
-}(_react.Component);
-
-var _default = ColorPicker;
-exports.default = _default;
-},{"react":"node_modules/react/index.js"}],"src/components/ColorPicker/ColorPicker.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/ColorPicker/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _ColorPicker = _interopRequireDefault(require("./ColorPicker"));
-
-require("./ColorPicker.css");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _default = _ColorPicker.default;
-exports.default = _default;
-},{"./ColorPicker":"src/components/ColorPicker/ColorPicker.js","./ColorPicker.css":"src/components/ColorPicker/ColorPicker.css"}],"node_modules/@fortawesome/fontawesome-svg-core/index.es.js":[function(require,module,exports) {
+},{"./ThemePicker":"src/components/ThemePicker/ThemePicker.js","./ThemePicker.css":"src/components/ThemePicker/ThemePicker.css"}],"node_modules/@fortawesome/fontawesome-svg-core/index.es.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -45779,7 +45650,162 @@ var _iconsCache = {
   faYinYang: faYinYang
 };
 exports.fas = _iconsCache;
-},{}],"node_modules/@fortawesome/fontawesome-free-brands/index.es.js":[function(require,module,exports) {
+},{}],"src/components/ColorPicker/ColorPicker.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _reactFontawesome = require("@fortawesome/react-fontawesome");
+
+var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var ColorPicker =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(ColorPicker, _Component);
+
+  function ColorPicker() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    var _temp;
+
+    _classCallCheck(this, ColorPicker);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(ColorPicker)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
+      showPicker: false,
+      colors: ['#3498db', '#2980b9', '#2ecc71', '#16a085', '#e74c3c', '#c0392b', '#34495e', '#2c3e50', '#8e44ad', '#333333', '#000000', '#ffffff']
+    }, _this.togglePicker = function (e) {
+      var btnClick = !e.target.classList.contains('selected');
+
+      var clickInside = _this.colorPicker && _this.colorPicker.contains(e.target);
+
+      _this.setState(function (prevState) {
+        return {
+          showPicker: clickInside ? true : btnClick ? false : !prevState.showPicker
+        };
+      });
+    }, _temp));
+  }
+
+  _createClass(ColorPicker, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      document.addEventListener('click', this.togglePicker, false);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      document.removeEventListener('click', this.togglePicker, false);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var _this$props = this.props,
+          color = _this$props.color,
+          changeColor = _this$props.changeColor;
+      var colors = this.state.colors.map(function (color, i) {
+        return _react.default.createElement("span", {
+          className: "color option",
+          key: i,
+          "data-color": color,
+          style: {
+            background: color,
+            border: color === '#ffffff' ? '2px solid #ccc' : '2px solid #fff'
+          },
+          onClick: changeColor
+        });
+      });
+      return _react.default.createElement("div", {
+        className: "color-picker-wrapper"
+      }, _react.default.createElement("label", null, "Background:", _react.default.createElement("div", {
+        className: "color selected",
+        style: {
+          background: color
+        }
+      })), this.state.showPicker && _react.default.createElement("div", {
+        className: "color-picker",
+        ref: function ref(picker) {
+          return _this2.colorPicker = picker;
+        }
+      }, _react.default.createElement("div", {
+        className: "colors"
+      }, colors), _react.default.createElement("div", {
+        className: "input-wrapper"
+      }, _react.default.createElement("div", {
+        className: "icon-wrapper"
+      }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
+        className: "hashtag",
+        icon: _freeSolidSvgIcons.faHashtag
+      })), _react.default.createElement("input", {
+        className: "color-input",
+        type: "text",
+        onChange: changeColor,
+        value: color.replace('#', ''),
+        maxLength: "6"
+      }))));
+    }
+  }]);
+
+  return ColorPicker;
+}(_react.Component);
+
+var _default = ColorPicker;
+exports.default = _default;
+},{"react":"node_modules/react/index.js","@fortawesome/react-fontawesome":"node_modules/@fortawesome/react-fontawesome/index.es.js","@fortawesome/free-solid-svg-icons":"node_modules/@fortawesome/free-solid-svg-icons/index.es.js"}],"src/components/ColorPicker/ColorPicker.css":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/ColorPicker/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ColorPicker = _interopRequireDefault(require("./ColorPicker"));
+
+require("./ColorPicker.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = _ColorPicker.default;
+exports.default = _default;
+},{"./ColorPicker":"src/components/ColorPicker/ColorPicker.js","./ColorPicker.css":"src/components/ColorPicker/ColorPicker.css"}],"node_modules/@fortawesome/fontawesome-free-brands/index.es.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -48499,7 +48525,7 @@ function (_Component) {
           changeColor = _this$props.changeColor,
           changeTheme = _this$props.changeTheme,
           saveSnap = _this$props.saveSnap,
-          sendSnap = _this$props.sendSnap;
+          shareSnap = _this$props.shareSnap;
       return _react.default.createElement("nav", {
         className: "nav"
       }, _react.default.createElement("p", {
@@ -48519,7 +48545,7 @@ function (_Component) {
         icon: _freeSolidSvgIcons.faDownload
       })), _react.default.createElement("button", {
         className: "share-twitter",
-        onClick: sendSnap
+        onClick: shareSnap
       }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
         className: "font-awesome",
         icon: _fontawesomeFreeBrands.faTwitter
@@ -68436,8 +68462,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -68483,7 +68507,8 @@ function (_Component) {
         };
       });
     }, _this.changeColor = function (e) {
-      var color = e.target.dataset.color;
+      console.log(e.target.value);
+      var color = e.target.dataset.color || '#' + e.target.value;
 
       _this.setState(function () {
         return {
@@ -68491,12 +68516,12 @@ function (_Component) {
         };
       });
     }, _this.changeTheme = function (e) {
-      var _e$target = e.target,
-          name = _e$target.name,
-          value = _e$target.value;
+      var theme = e.target.value;
 
       _this.setState(function () {
-        return _defineProperty({}, name, value);
+        return {
+          theme: theme
+        };
       });
     }, _this.saveSnap = function () {
       var wrapper = document.querySelector('.code-wrapper');
@@ -68508,7 +68533,7 @@ function (_Component) {
       }).then(function (blob) {
         (0, _fileSaver.saveAs)(blob, 'code-snap.png');
       });
-    }, _this.sendSnap = function () {
+    }, _this.shareSnap = function () {
       var wrapper = document.querySelector('.transparent');
 
       _domToImage.default.toBlob(wrapper, {
@@ -68518,16 +68543,15 @@ function (_Component) {
       }).then(function (blob) {
         var formData = new FormData();
         formData.append('upl', blob);
-        fetch('https://beautiful-pig.glitch.me/', {
+        fetch('https://code-snap.glitch.me/', {
           method: 'POST',
           body: formData
         }).then(function (res) {
           return res.json();
         }).then(function (data) {
-          console.log(data);
-          window.open("https://twitter.com/intent/tweet?text=".concat(data.imageURL));
+          window.open("https://twitter.com/intent/tweet?text=".concat(data.imageURL), '_blank', 'width=600,height=300');
         }).catch(function (err) {
-          return console.log(err);
+          return console.log('Opps, something went wrong...');
         });
       });
     }, _temp));
@@ -68541,7 +68565,7 @@ function (_Component) {
         changeColor: this.changeColor,
         changeTheme: this.changeTheme,
         saveSnap: this.saveSnap,
-        sendSnap: this.sendSnap
+        shareSnap: this.shareSnap
       }), _react.default.createElement(_CodeWrapper.default, {
         color: this.state.color,
         theme: this.state.theme,
@@ -68618,7 +68642,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55682" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59735" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

@@ -720,8 +720,8 @@ label {
   position: absolute;
   top: 60px;
   right: -17px;
-  width: 200px;
-  padding: 15px;
+  width: 230px;
+  padding: 5px;
   background: #fff;
   border-radius: 5px;
   -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
@@ -748,14 +748,23 @@ label {
   border-bottom: 10px solid #fff;
 }
 
+.colors {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
 .color {
   display: inline-block;
   height: 40px;
   width: 40px;
   margin: 5px;
   border-radius: 50%;
-  display: inline-block;
-  border: 2px solid #ccc;
   cursor: pointer;
 }
 
@@ -766,6 +775,40 @@ label {
 .selected {
   -webkit-box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
           box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+.input-wrapper {
+  margin: 10px 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.icon-wrapper {
+  height: 100%;
+  padding: 10px;
+  background: #ddd;
+  border-radius: 10px 0 0 10px;
+}
+
+.hashtag {
+  background: #ddd;
+  height: 100%;
+  width: 100%;
+  color: #777;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 0 10px 10px 0;
+  color: #777;
+  font-weight: bold;
+  font-size: 16px;
 }
 .nav {
   padding: 15px 100px;

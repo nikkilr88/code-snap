@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHashtag } from '@fortawesome/free-solid-svg-icons'
+
 class ColorPicker extends Component {
   state = {
     showPicker: false,
@@ -20,11 +23,11 @@ class ColorPicker extends Component {
   }
 
   togglePicker = e => {
-    const clickOut = !e.target.classList.contains('selected')
-    const colorClick = e.target.classList.contains('option')
+    const btnClick = !e.target.classList.contains('selected')
+    const clickInside = this.colorPicker && this.colorPicker.contains(e.target)
 
     this.setState(prevState => ({
-      showPicker: colorClick ? true : clickOut ? false : !prevState.showPicker
+      showPicker: clickInside ? true : btnClick ? false : !prevState.showPicker
     }))
   }
 
@@ -44,7 +47,10 @@ class ColorPicker extends Component {
         className="color option"
         key={i}
         data-color={color}
-        style={{ background: color }}
+        style={{
+          background: color,
+          border: color === '#ffffff' ? '2px solid #ccc' : '2px solid #fff'
+        }}
         onClick={changeColor}
       />
     ))
@@ -55,7 +61,28 @@ class ColorPicker extends Component {
           <div className="color selected" style={{ background: color }} />
         </label>
 
-        {this.state.showPicker && <div className="color-picker">{colors}</div>}
+        {this.state.showPicker && (
+          <div
+            className="color-picker"
+            ref={picker => (this.colorPicker = picker)}
+          >
+            <div className="colors">{colors}</div>
+
+            <div className="input-wrapper">
+              <div className="icon-wrapper">
+                <FontAwesomeIcon className="hashtag" icon={faHashtag} />
+              </div>
+
+              <input
+                className="color-input"
+                type="text"
+                onChange={changeColor}
+                value={color.replace('#', '')}
+                maxLength="6"
+              />
+            </div>
+          </div>
+        )}
       </div>
     )
   }

@@ -68524,12 +68524,17 @@ function (_Component) {
         };
       });
     }, _this.saveSnap = function () {
-      var wrapper = document.querySelector('.code-wrapper');
+      var wrapper = document.querySelector('.transparent');
+      var scale = 2;
 
       _domToImage.default.toBlob(wrapper, {
         style: {
-          margin: '0'
-        }
+          margin: '0',
+          transform: 'scale(1.4)',
+          transformOrigin: 'top left'
+        },
+        width: wrapper.clientWidth * 1.4,
+        height: wrapper.clientHeight * 1.4
       }).then(function (blob) {
         (0, _fileSaver.saveAs)(blob, 'code-snap.png');
       });
@@ -68538,8 +68543,12 @@ function (_Component) {
 
       _domToImage.default.toBlob(wrapper, {
         style: {
-          margin: '0'
-        }
+          margin: '0',
+          transform: 'scale(1.4)',
+          transformOrigin: 'top left'
+        },
+        width: wrapper.clientWidth * 1.4,
+        height: wrapper.clientHeight * 1.4
       }).then(function (blob) {
         var formData = new FormData();
         formData.append('upl', blob);
@@ -68642,7 +68651,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59735" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60128" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

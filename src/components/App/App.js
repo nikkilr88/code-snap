@@ -31,10 +31,17 @@ class App extends Component {
   }
 
   saveSnap = () => {
-    const wrapper = document.querySelector('.code-wrapper')
+    const wrapper = document.querySelector('.transparent')
+    const scale = 2
     domtoimage
       .toBlob(wrapper, {
-        style: { margin: '0' }
+        style: {
+          margin: '0',
+          transform: 'scale(1.4)',
+          transformOrigin: 'top left'
+        },
+        width: wrapper.clientWidth * 1.4,
+        height: wrapper.clientHeight * 1.4
       })
       .then(blob => {
         saveAs(blob, 'code-snap.png')
@@ -45,7 +52,13 @@ class App extends Component {
     const wrapper = document.querySelector('.transparent')
     domtoimage
       .toBlob(wrapper, {
-        style: { margin: '0' }
+        style: {
+          margin: '0',
+          transform: 'scale(1.4)',
+          transformOrigin: 'top left'
+        },
+        width: wrapper.clientWidth * 1.4,
+        height: wrapper.clientHeight * 1.4
       })
       .then(blob => {
         const formData = new FormData()

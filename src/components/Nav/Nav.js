@@ -8,7 +8,7 @@ import { faTwitter } from '@fortawesome/fontawesome-free-brands'
 
 class Nav extends Component {
   render() {
-    const { color, changeColor, changeTheme, saveSnap, sendSnap } = this.props
+    const { color, changeColor, changeTheme, saveSnap, shareSnap } = this.props
     return (
       <nav className="nav">
         <p className="logo">
@@ -20,7 +20,7 @@ class Nav extends Component {
           <FontAwesomeIcon className="font-awesome" icon={faDownload} />
         </button>
 
-        <button className="share-twitter" onClick={sendSnap}>
+        <button className="share-twitter" onClick={shareSnap}>
           <FontAwesomeIcon className="font-awesome" icon={faTwitter} />
           Share
         </button>

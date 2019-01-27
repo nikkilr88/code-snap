@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Inconsolata');
+
 .CodeMirror {
   height: auto;
   width: auto;
   text-align: left;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
   font-size: 17px;
+  font-family: 'Inconsolata', monospace;
 }
 
 .CodeMirror-scroll {

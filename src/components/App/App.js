@@ -1,9 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import CodeWrapper from '../CodeWrapper'
 import Nav from '../Nav'
-import axios from 'axios'
 
-// Lib
+import axios from 'axios'
 import domtoimage from 'dom-to-image'
 import { saveAs } from 'file-saver'
 
@@ -21,13 +20,14 @@ class App extends Component {
   }
 
   changeColor = e => {
-    const color = e.target.dataset.color
+    console.log(e.target.value)
+    const color = e.target.dataset.color || '#' + e.target.value
     this.setState(() => ({ color }))
   }
 
   changeTheme = e => {
-    const { name, value } = e.target
-    this.setState(() => ({ [name]: value }))
+    const theme = e.target.value
+    this.setState(() => ({ theme }))
   }
 
   saveSnap = () => {
@@ -36,33 +36,34 @@ class App extends Component {
       .toBlob(wrapper, {
         style: { margin: '0' }
       })
-      .then(function(blob) {
+      .then(blob => {
         saveAs(blob, 'code-snap.png')
       })
   }
 
-  sendSnap = () => {
+  shareSnap = () => {
     const wrapper = document.querySelector('.transparent')
     domtoimage
       .toBlob(wrapper, {
         style: { margin: '0' }
       })
-      .then(function(blob) {
+      .then(blob => {
         const formData = new FormData()
         formData.append('upl', blob)
 
-        fetch('https://beautiful-pig.glitch.me/', {
+        fetch('https://code-snap.glitch.me/', {
           method: 'POST',
           body: formData
         })
           .then(res => res.json())
           .then(data => {
-            console.log(data)
             window.open(
-              `https://twitter.com/intent/tweet?text=${data.imageURL}`
+              `https://twitter.com/intent/tweet?text=${data.imageURL}`,
+              '_blank',
+              'width=600,height=300'
             )
           })
-          .catch(err => console.log(err))
+          .catch(err => console.log('Opps, something went wrong...'))
       })
   }
 
@@ -74,7 +75,7 @@ class App extends Component {
           changeColor={this.changeColor}
           changeTheme={this.changeTheme}
           saveSnap={this.saveSnap}
-          sendSnap={this.sendSnap}
+          shareSnap={this.shareSnap}
         />
 
         <CodeWrapper

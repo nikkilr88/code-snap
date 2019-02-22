@@ -34862,7 +34862,80 @@ var UnControlled = function(_super) {
   return UnControlled;
 }(React.Component);
 exports.UnControlled = UnControlled;
-},{"react":"node_modules/react/index.js","codemirror":"node_modules/codemirror/lib/codemirror.js"}],"node_modules/codemirror/mode/javascript/javascript.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","codemirror":"node_modules/codemirror/lib/codemirror.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
+  };
+
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+
+    cssTimeout = null;
+  }, 50);
+}
+
+module.exports = reloadCSS;
+},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"node_modules/codemirror/lib/codemirror.css":[function(require,module,exports) {
+
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/codemirror/mode/javascript/javascript.js":[function(require,module,exports) {
 var define;
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
@@ -35790,80 +35863,761 @@ CodeMirror.defineMIME("application/typescript", { name: "javascript", typescript
 
 });
 
-},{"../../lib/codemirror":"node_modules/codemirror/lib/codemirror.js"}],"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+},{"../../lib/codemirror":"node_modules/codemirror/lib/codemirror.js"}],"node_modules/codemirror/mode/lua/lua.js":[function(require,module,exports) {
+var define;
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: https://codemirror.net/LICENSE
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
+// LUA mode. Ported to CodeMirror 2 from Franciszek Wawrzak's
+// CodeMirror 1 mode.
+// highlights keywords, strings, comments (no leveling supported! ("[==[")), tokens, basic indenting
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+"use strict";
+
+CodeMirror.defineMode("lua", function(config, parserConfig) {
+  var indentUnit = config.indentUnit;
+
+  function prefixRE(words) {
+    return new RegExp("^(?:" + words.join("|") + ")", "i");
+  }
+  function wordRE(words) {
+    return new RegExp("^(?:" + words.join("|") + ")$", "i");
+  }
+  var specials = wordRE(parserConfig.specials || []);
+
+  // long list of standard functions from lua manual
+  var builtins = wordRE([
+    "_G","_VERSION","assert","collectgarbage","dofile","error","getfenv","getmetatable","ipairs","load",
+    "loadfile","loadstring","module","next","pairs","pcall","print","rawequal","rawget","rawset","require",
+    "select","setfenv","setmetatable","tonumber","tostring","type","unpack","xpcall",
+
+    "coroutine.create","coroutine.resume","coroutine.running","coroutine.status","coroutine.wrap","coroutine.yield",
+
+    "debug.debug","debug.getfenv","debug.gethook","debug.getinfo","debug.getlocal","debug.getmetatable",
+    "debug.getregistry","debug.getupvalue","debug.setfenv","debug.sethook","debug.setlocal","debug.setmetatable",
+    "debug.setupvalue","debug.traceback",
+
+    "close","flush","lines","read","seek","setvbuf","write",
+
+    "io.close","io.flush","io.input","io.lines","io.open","io.output","io.popen","io.read","io.stderr","io.stdin",
+    "io.stdout","io.tmpfile","io.type","io.write",
+
+    "math.abs","math.acos","math.asin","math.atan","math.atan2","math.ceil","math.cos","math.cosh","math.deg",
+    "math.exp","math.floor","math.fmod","math.frexp","math.huge","math.ldexp","math.log","math.log10","math.max",
+    "math.min","math.modf","math.pi","math.pow","math.rad","math.random","math.randomseed","math.sin","math.sinh",
+    "math.sqrt","math.tan","math.tanh",
+
+    "os.clock","os.date","os.difftime","os.execute","os.exit","os.getenv","os.remove","os.rename","os.setlocale",
+    "os.time","os.tmpname",
+
+    "package.cpath","package.loaded","package.loaders","package.loadlib","package.path","package.preload",
+    "package.seeall",
+
+    "string.byte","string.char","string.dump","string.find","string.format","string.gmatch","string.gsub",
+    "string.len","string.lower","string.match","string.rep","string.reverse","string.sub","string.upper",
+
+    "table.concat","table.insert","table.maxn","table.remove","table.sort"
+  ]);
+  var keywords = wordRE(["and","break","elseif","false","nil","not","or","return",
+                         "true","function", "end", "if", "then", "else", "do",
+                         "while", "repeat", "until", "for", "in", "local" ]);
+
+  var indentTokens = wordRE(["function", "if","repeat","do", "\\(", "{"]);
+  var dedentTokens = wordRE(["end", "until", "\\)", "}"]);
+  var dedentPartial = prefixRE(["end", "until", "\\)", "}", "else", "elseif"]);
+
+  function readBracket(stream) {
+    var level = 0;
+    while (stream.eat("=")) ++level;
+    stream.eat("[");
+    return level;
   }
 
-  return bundleURL;
-}
-
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
-
-    if (matches) {
-      return getBaseURL(matches[0]);
+  function normal(stream, state) {
+    var ch = stream.next();
+    if (ch == "-" && stream.eat("-")) {
+      if (stream.eat("[") && stream.eat("["))
+        return (state.cur = bracketed(readBracket(stream), "comment"))(stream, state);
+      stream.skipToEnd();
+      return "comment";
     }
+    if (ch == "\"" || ch == "'")
+      return (state.cur = string(ch))(stream, state);
+    if (ch == "[" && /[\[=]/.test(stream.peek()))
+      return (state.cur = bracketed(readBracket(stream), "string"))(stream, state);
+    if (/\d/.test(ch)) {
+      stream.eatWhile(/[\w.%]/);
+      return "number";
+    }
+    if (/[\w_]/.test(ch)) {
+      stream.eatWhile(/[\w\\\-_.]/);
+      return "variable";
+    }
+    return null;
   }
 
-  return '/';
-}
+  function bracketed(level, style) {
+    return function(stream, state) {
+      var curlev = null, ch;
+      while ((ch = stream.next()) != null) {
+        if (curlev == null) {if (ch == "]") curlev = 0;}
+        else if (ch == "=") ++curlev;
+        else if (ch == "]" && curlev == level) { state.cur = normal; break; }
+        else curlev = null;
+      }
+      return style;
+    };
+  }
 
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
+  function string(quote) {
+    return function(stream, state) {
+      var escaped = false, ch;
+      while ((ch = stream.next()) != null) {
+        if (ch == quote && !escaped) break;
+        escaped = !escaped && ch == "\\";
+      }
+      if (!escaped) state.cur = normal;
+      return "string";
+    };
+  }
 
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
+  return {
+    startState: function(basecol) {
+      return {basecol: basecol || 0, indentDepth: 0, cur: normal};
+    },
 
-function updateLink(link) {
-  var newLink = link.cloneNode();
+    token: function(stream, state) {
+      if (stream.eatSpace()) return null;
+      var style = state.cur(stream, state);
+      var word = stream.current();
+      if (style == "variable") {
+        if (keywords.test(word)) style = "keyword";
+        else if (builtins.test(word)) style = "builtin";
+        else if (specials.test(word)) style = "variable-2";
+      }
+      if ((style != "comment") && (style != "string")){
+        if (indentTokens.test(word)) ++state.indentDepth;
+        else if (dedentTokens.test(word)) --state.indentDepth;
+      }
+      return style;
+    },
 
-  newLink.onload = function () {
-    link.remove();
+    indent: function(state, textAfter) {
+      var closing = dedentPartial.test(textAfter);
+      return state.basecol + indentUnit * (state.indentDepth - (closing ? 1 : 0));
+    },
+
+    lineComment: "--",
+    blockCommentStart: "--[[",
+    blockCommentEnd: "]]"
+  };
+});
+
+CodeMirror.defineMIME("text/x-lua", "lua");
+
+});
+
+},{"../../lib/codemirror":"node_modules/codemirror/lib/codemirror.js"}],"node_modules/codemirror/mode/go/go.js":[function(require,module,exports) {
+var define;
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: https://codemirror.net/LICENSE
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+"use strict";
+
+CodeMirror.defineMode("go", function(config) {
+  var indentUnit = config.indentUnit;
+
+  var keywords = {
+    "break":true, "case":true, "chan":true, "const":true, "continue":true,
+    "default":true, "defer":true, "else":true, "fallthrough":true, "for":true,
+    "func":true, "go":true, "goto":true, "if":true, "import":true,
+    "interface":true, "map":true, "package":true, "range":true, "return":true,
+    "select":true, "struct":true, "switch":true, "type":true, "var":true,
+    "bool":true, "byte":true, "complex64":true, "complex128":true,
+    "float32":true, "float64":true, "int8":true, "int16":true, "int32":true,
+    "int64":true, "string":true, "uint8":true, "uint16":true, "uint32":true,
+    "uint64":true, "int":true, "uint":true, "uintptr":true, "error": true,
+    "rune":true
   };
 
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
+  var atoms = {
+    "true":true, "false":true, "iota":true, "nil":true, "append":true,
+    "cap":true, "close":true, "complex":true, "copy":true, "delete":true, "imag":true,
+    "len":true, "make":true, "new":true, "panic":true, "print":true,
+    "println":true, "real":true, "recover":true
+  };
 
-var cssTimeout = null;
+  var isOperatorChar = /[+\-*&^%:=<>!|\/]/;
 
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
+  var curPunc;
 
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
+  function tokenBase(stream, state) {
+    var ch = stream.next();
+    if (ch == '"' || ch == "'" || ch == "`") {
+      state.tokenize = tokenString(ch);
+      return state.tokenize(stream, state);
+    }
+    if (/[\d\.]/.test(ch)) {
+      if (ch == ".") {
+        stream.match(/^[0-9]+([eE][\-+]?[0-9]+)?/);
+      } else if (ch == "0") {
+        stream.match(/^[xX][0-9a-fA-F]+/) || stream.match(/^0[0-7]+/);
+      } else {
+        stream.match(/^[0-9]*\.?[0-9]*([eE][\-+]?[0-9]+)?/);
+      }
+      return "number";
+    }
+    if (/[\[\]{}\(\),;\:\.]/.test(ch)) {
+      curPunc = ch;
+      return null;
+    }
+    if (ch == "/") {
+      if (stream.eat("*")) {
+        state.tokenize = tokenComment;
+        return tokenComment(stream, state);
+      }
+      if (stream.eat("/")) {
+        stream.skipToEnd();
+        return "comment";
       }
     }
+    if (isOperatorChar.test(ch)) {
+      stream.eatWhile(isOperatorChar);
+      return "operator";
+    }
+    stream.eatWhile(/[\w\$_\xa1-\uffff]/);
+    var cur = stream.current();
+    if (keywords.propertyIsEnumerable(cur)) {
+      if (cur == "case" || cur == "default") curPunc = "case";
+      return "keyword";
+    }
+    if (atoms.propertyIsEnumerable(cur)) return "atom";
+    return "variable";
+  }
 
-    cssTimeout = null;
-  }, 50);
-}
+  function tokenString(quote) {
+    return function(stream, state) {
+      var escaped = false, next, end = false;
+      while ((next = stream.next()) != null) {
+        if (next == quote && !escaped) {end = true; break;}
+        escaped = !escaped && quote != "`" && next == "\\";
+      }
+      if (end || !(escaped || quote == "`"))
+        state.tokenize = tokenBase;
+      return "string";
+    };
+  }
 
-module.exports = reloadCSS;
-},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"node_modules/codemirror/lib/codemirror.css":[function(require,module,exports) {
+  function tokenComment(stream, state) {
+    var maybeEnd = false, ch;
+    while (ch = stream.next()) {
+      if (ch == "/" && maybeEnd) {
+        state.tokenize = tokenBase;
+        break;
+      }
+      maybeEnd = (ch == "*");
+    }
+    return "comment";
+  }
 
-        var reloadCSS = require('_css_loader');
-        module.hot.dispose(reloadCSS);
-        module.hot.accept(reloadCSS);
-      
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/codemirror/theme/blackboard.css":[function(require,module,exports) {
+  function Context(indented, column, type, align, prev) {
+    this.indented = indented;
+    this.column = column;
+    this.type = type;
+    this.align = align;
+    this.prev = prev;
+  }
+  function pushContext(state, col, type) {
+    return state.context = new Context(state.indented, col, type, null, state.context);
+  }
+  function popContext(state) {
+    if (!state.context.prev) return;
+    var t = state.context.type;
+    if (t == ")" || t == "]" || t == "}")
+      state.indented = state.context.indented;
+    return state.context = state.context.prev;
+  }
+
+  // Interface
+
+  return {
+    startState: function(basecolumn) {
+      return {
+        tokenize: null,
+        context: new Context((basecolumn || 0) - indentUnit, 0, "top", false),
+        indented: 0,
+        startOfLine: true
+      };
+    },
+
+    token: function(stream, state) {
+      var ctx = state.context;
+      if (stream.sol()) {
+        if (ctx.align == null) ctx.align = false;
+        state.indented = stream.indentation();
+        state.startOfLine = true;
+        if (ctx.type == "case") ctx.type = "}";
+      }
+      if (stream.eatSpace()) return null;
+      curPunc = null;
+      var style = (state.tokenize || tokenBase)(stream, state);
+      if (style == "comment") return style;
+      if (ctx.align == null) ctx.align = true;
+
+      if (curPunc == "{") pushContext(state, stream.column(), "}");
+      else if (curPunc == "[") pushContext(state, stream.column(), "]");
+      else if (curPunc == "(") pushContext(state, stream.column(), ")");
+      else if (curPunc == "case") ctx.type = "case";
+      else if (curPunc == "}" && ctx.type == "}") popContext(state);
+      else if (curPunc == ctx.type) popContext(state);
+      state.startOfLine = false;
+      return style;
+    },
+
+    indent: function(state, textAfter) {
+      if (state.tokenize != tokenBase && state.tokenize != null) return CodeMirror.Pass;
+      var ctx = state.context, firstChar = textAfter && textAfter.charAt(0);
+      if (ctx.type == "case" && /^(?:case|default)\b/.test(textAfter)) {
+        state.context.type = "}";
+        return ctx.indented;
+      }
+      var closing = firstChar == ctx.type;
+      if (ctx.align) return ctx.column + (closing ? 0 : 1);
+      else return ctx.indented + (closing ? 0 : indentUnit);
+    },
+
+    electricChars: "{}):",
+    closeBrackets: "()[]{}''\"\"``",
+    fold: "brace",
+    blockCommentStart: "/*",
+    blockCommentEnd: "*/",
+    lineComment: "//"
+  };
+});
+
+CodeMirror.defineMIME("text/x-go", "go");
+
+});
+
+},{"../../lib/codemirror":"node_modules/codemirror/lib/codemirror.js"}],"node_modules/codemirror/mode/python/python.js":[function(require,module,exports) {
+var define;
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: https://codemirror.net/LICENSE
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+  "use strict";
+
+  function wordRegexp(words) {
+    return new RegExp("^((" + words.join(")|(") + "))\\b");
+  }
+
+  var wordOperators = wordRegexp(["and", "or", "not", "is"]);
+  var commonKeywords = ["as", "assert", "break", "class", "continue",
+                        "def", "del", "elif", "else", "except", "finally",
+                        "for", "from", "global", "if", "import",
+                        "lambda", "pass", "raise", "return",
+                        "try", "while", "with", "yield", "in"];
+  var commonBuiltins = ["abs", "all", "any", "bin", "bool", "bytearray", "callable", "chr",
+                        "classmethod", "compile", "complex", "delattr", "dict", "dir", "divmod",
+                        "enumerate", "eval", "filter", "float", "format", "frozenset",
+                        "getattr", "globals", "hasattr", "hash", "help", "hex", "id",
+                        "input", "int", "isinstance", "issubclass", "iter", "len",
+                        "list", "locals", "map", "max", "memoryview", "min", "next",
+                        "object", "oct", "open", "ord", "pow", "property", "range",
+                        "repr", "reversed", "round", "set", "setattr", "slice",
+                        "sorted", "staticmethod", "str", "sum", "super", "tuple",
+                        "type", "vars", "zip", "__import__", "NotImplemented",
+                        "Ellipsis", "__debug__"];
+  CodeMirror.registerHelper("hintWords", "python", commonKeywords.concat(commonBuiltins));
+
+  function top(state) {
+    return state.scopes[state.scopes.length - 1];
+  }
+
+  CodeMirror.defineMode("python", function(conf, parserConf) {
+    var ERRORCLASS = "error";
+
+    var delimiters = parserConf.delimiters || parserConf.singleDelimiters || /^[\(\)\[\]\{\}@,:`=;\.\\]/;
+    //               (Backwards-compatiblity with old, cumbersome config system)
+    var operators = [parserConf.singleOperators, parserConf.doubleOperators, parserConf.doubleDelimiters, parserConf.tripleDelimiters,
+                     parserConf.operators || /^([-+*/%\/&|^]=?|[<>=]+|\/\/=?|\*\*=?|!=|[~!@])/]
+    for (var i = 0; i < operators.length; i++) if (!operators[i]) operators.splice(i--, 1)
+
+    var hangingIndent = parserConf.hangingIndent || conf.indentUnit;
+
+    var myKeywords = commonKeywords, myBuiltins = commonBuiltins;
+    if (parserConf.extra_keywords != undefined)
+      myKeywords = myKeywords.concat(parserConf.extra_keywords);
+
+    if (parserConf.extra_builtins != undefined)
+      myBuiltins = myBuiltins.concat(parserConf.extra_builtins);
+
+    var py3 = !(parserConf.version && Number(parserConf.version) < 3)
+    if (py3) {
+      // since http://legacy.python.org/dev/peps/pep-0465/ @ is also an operator
+      var identifiers = parserConf.identifiers|| /^[_A-Za-z\u00A1-\uFFFF][_A-Za-z0-9\u00A1-\uFFFF]*/;
+      myKeywords = myKeywords.concat(["nonlocal", "False", "True", "None", "async", "await"]);
+      myBuiltins = myBuiltins.concat(["ascii", "bytes", "exec", "print"]);
+      var stringPrefixes = new RegExp("^(([rbuf]|(br)|(fr))?('{3}|\"{3}|['\"]))", "i");
+    } else {
+      var identifiers = parserConf.identifiers|| /^[_A-Za-z][_A-Za-z0-9]*/;
+      myKeywords = myKeywords.concat(["exec", "print"]);
+      myBuiltins = myBuiltins.concat(["apply", "basestring", "buffer", "cmp", "coerce", "execfile",
+                                      "file", "intern", "long", "raw_input", "reduce", "reload",
+                                      "unichr", "unicode", "xrange", "False", "True", "None"]);
+      var stringPrefixes = new RegExp("^(([rubf]|(ur)|(br))?('{3}|\"{3}|['\"]))", "i");
+    }
+    var keywords = wordRegexp(myKeywords);
+    var builtins = wordRegexp(myBuiltins);
+
+    // tokenizers
+    function tokenBase(stream, state) {
+      var sol = stream.sol() && state.lastToken != "\\"
+      if (sol) state.indent = stream.indentation()
+      // Handle scope changes
+      if (sol && top(state).type == "py") {
+        var scopeOffset = top(state).offset;
+        if (stream.eatSpace()) {
+          var lineOffset = stream.indentation();
+          if (lineOffset > scopeOffset)
+            pushPyScope(state);
+          else if (lineOffset < scopeOffset && dedent(stream, state) && stream.peek() != "#")
+            state.errorToken = true;
+          return null;
+        } else {
+          var style = tokenBaseInner(stream, state);
+          if (scopeOffset > 0 && dedent(stream, state))
+            style += " " + ERRORCLASS;
+          return style;
+        }
+      }
+      return tokenBaseInner(stream, state);
+    }
+
+    function tokenBaseInner(stream, state) {
+      if (stream.eatSpace()) return null;
+
+      // Handle Comments
+      if (stream.match(/^#.*/)) return "comment";
+
+      // Handle Number Literals
+      if (stream.match(/^[0-9\.]/, false)) {
+        var floatLiteral = false;
+        // Floats
+        if (stream.match(/^[\d_]*\.\d+(e[\+\-]?\d+)?/i)) { floatLiteral = true; }
+        if (stream.match(/^[\d_]+\.\d*/)) { floatLiteral = true; }
+        if (stream.match(/^\.\d+/)) { floatLiteral = true; }
+        if (floatLiteral) {
+          // Float literals may be "imaginary"
+          stream.eat(/J/i);
+          return "number";
+        }
+        // Integers
+        var intLiteral = false;
+        // Hex
+        if (stream.match(/^0x[0-9a-f_]+/i)) intLiteral = true;
+        // Binary
+        if (stream.match(/^0b[01_]+/i)) intLiteral = true;
+        // Octal
+        if (stream.match(/^0o[0-7_]+/i)) intLiteral = true;
+        // Decimal
+        if (stream.match(/^[1-9][\d_]*(e[\+\-]?[\d_]+)?/)) {
+          // Decimal literals may be "imaginary"
+          stream.eat(/J/i);
+          // TODO - Can you have imaginary longs?
+          intLiteral = true;
+        }
+        // Zero by itself with no other piece of number.
+        if (stream.match(/^0(?![\dx])/i)) intLiteral = true;
+        if (intLiteral) {
+          // Integer literals may be "long"
+          stream.eat(/L/i);
+          return "number";
+        }
+      }
+
+      // Handle Strings
+      if (stream.match(stringPrefixes)) {
+        var isFmtString = stream.current().toLowerCase().indexOf('f') !== -1;
+        if (!isFmtString) {
+          state.tokenize = tokenStringFactory(stream.current(), state.tokenize);
+          return state.tokenize(stream, state);
+        } else {
+          state.tokenize = formatStringFactory(stream.current(), state.tokenize);
+          return state.tokenize(stream, state);
+        }
+      }
+
+      for (var i = 0; i < operators.length; i++)
+        if (stream.match(operators[i])) return "operator"
+
+      if (stream.match(delimiters)) return "punctuation";
+
+      if (state.lastToken == "." && stream.match(identifiers))
+        return "property";
+
+      if (stream.match(keywords) || stream.match(wordOperators))
+        return "keyword";
+
+      if (stream.match(builtins))
+        return "builtin";
+
+      if (stream.match(/^(self|cls)\b/))
+        return "variable-2";
+
+      if (stream.match(identifiers)) {
+        if (state.lastToken == "def" || state.lastToken == "class")
+          return "def";
+        return "variable";
+      }
+
+      // Handle non-detected items
+      stream.next();
+      return ERRORCLASS;
+    }
+
+    function formatStringFactory(delimiter, tokenOuter) {
+      while ("rubf".indexOf(delimiter.charAt(0).toLowerCase()) >= 0)
+        delimiter = delimiter.substr(1);
+
+      var singleline = delimiter.length == 1;
+      var OUTCLASS = "string";
+
+      function tokenNestedExpr(depth) {
+        return function(stream, state) {
+          var inner = tokenBaseInner(stream, state)
+          if (inner == "punctuation") {
+            if (stream.current() == "{") {
+              state.tokenize = tokenNestedExpr(depth + 1)
+            } else if (stream.current() == "}") {
+              if (depth > 1) state.tokenize = tokenNestedExpr(depth - 1)
+              else state.tokenize = tokenString
+            }
+          }
+          return inner
+        }
+      }
+
+      function tokenString(stream, state) {
+        while (!stream.eol()) {
+          stream.eatWhile(/[^'"\{\}\\]/);
+          if (stream.eat("\\")) {
+            stream.next();
+            if (singleline && stream.eol())
+              return OUTCLASS;
+          } else if (stream.match(delimiter)) {
+            state.tokenize = tokenOuter;
+            return OUTCLASS;
+          } else if (stream.match('{{')) {
+            // ignore {{ in f-str
+            return OUTCLASS;
+          } else if (stream.match('{', false)) {
+            // switch to nested mode
+            state.tokenize = tokenNestedExpr(0)
+            if (stream.current()) return OUTCLASS;
+            else return state.tokenize(stream, state)
+          } else if (stream.match('}}')) {
+            return OUTCLASS;
+          } else if (stream.match('}')) {
+            // single } in f-string is an error
+            return ERRORCLASS;
+          } else {
+            stream.eat(/['"]/);
+          }
+        }
+        if (singleline) {
+          if (parserConf.singleLineStringErrors)
+            return ERRORCLASS;
+          else
+            state.tokenize = tokenOuter;
+        }
+        return OUTCLASS;
+      }
+      tokenString.isString = true;
+      return tokenString;
+    }
+
+    function tokenStringFactory(delimiter, tokenOuter) {
+      while ("rubf".indexOf(delimiter.charAt(0).toLowerCase()) >= 0)
+        delimiter = delimiter.substr(1);
+
+      var singleline = delimiter.length == 1;
+      var OUTCLASS = "string";
+
+      function tokenString(stream, state) {
+        while (!stream.eol()) {
+          stream.eatWhile(/[^'"\\]/);
+          if (stream.eat("\\")) {
+            stream.next();
+            if (singleline && stream.eol())
+              return OUTCLASS;
+          } else if (stream.match(delimiter)) {
+            state.tokenize = tokenOuter;
+            return OUTCLASS;
+          } else {
+            stream.eat(/['"]/);
+          }
+        }
+        if (singleline) {
+          if (parserConf.singleLineStringErrors)
+            return ERRORCLASS;
+          else
+            state.tokenize = tokenOuter;
+        }
+        return OUTCLASS;
+      }
+      tokenString.isString = true;
+      return tokenString;
+    }
+
+    function pushPyScope(state) {
+      while (top(state).type != "py") state.scopes.pop()
+      state.scopes.push({offset: top(state).offset + conf.indentUnit,
+                         type: "py",
+                         align: null})
+    }
+
+    function pushBracketScope(stream, state, type) {
+      var align = stream.match(/^([\s\[\{\(]|#.*)*$/, false) ? null : stream.column() + 1
+      state.scopes.push({offset: state.indent + hangingIndent,
+                         type: type,
+                         align: align})
+    }
+
+    function dedent(stream, state) {
+      var indented = stream.indentation();
+      while (state.scopes.length > 1 && top(state).offset > indented) {
+        if (top(state).type != "py") return true;
+        state.scopes.pop();
+      }
+      return top(state).offset != indented;
+    }
+
+    function tokenLexer(stream, state) {
+      if (stream.sol()) state.beginningOfLine = true;
+
+      var style = state.tokenize(stream, state);
+      var current = stream.current();
+
+      // Handle decorators
+      if (state.beginningOfLine && current == "@")
+        return stream.match(identifiers, false) ? "meta" : py3 ? "operator" : ERRORCLASS;
+
+      if (/\S/.test(current)) state.beginningOfLine = false;
+
+      if ((style == "variable" || style == "builtin")
+          && state.lastToken == "meta")
+        style = "meta";
+
+      // Handle scope changes.
+      if (current == "pass" || current == "return")
+        state.dedent += 1;
+
+      if (current == "lambda") state.lambda = true;
+      if (current == ":" && !state.lambda && top(state).type == "py")
+        pushPyScope(state);
+
+      if (current.length == 1 && !/string|comment/.test(style)) {
+        var delimiter_index = "[({".indexOf(current);
+        if (delimiter_index != -1)
+          pushBracketScope(stream, state, "])}".slice(delimiter_index, delimiter_index+1));
+
+        delimiter_index = "])}".indexOf(current);
+        if (delimiter_index != -1) {
+          if (top(state).type == current) state.indent = state.scopes.pop().offset - hangingIndent
+          else return ERRORCLASS;
+        }
+      }
+      if (state.dedent > 0 && stream.eol() && top(state).type == "py") {
+        if (state.scopes.length > 1) state.scopes.pop();
+        state.dedent -= 1;
+      }
+
+      return style;
+    }
+
+    var external = {
+      startState: function(basecolumn) {
+        return {
+          tokenize: tokenBase,
+          scopes: [{offset: basecolumn || 0, type: "py", align: null}],
+          indent: basecolumn || 0,
+          lastToken: null,
+          lambda: false,
+          dedent: 0
+        };
+      },
+
+      token: function(stream, state) {
+        var addErr = state.errorToken;
+        if (addErr) state.errorToken = false;
+        var style = tokenLexer(stream, state);
+
+        if (style && style != "comment")
+          state.lastToken = (style == "keyword" || style == "punctuation") ? stream.current() : style;
+        if (style == "punctuation") style = null;
+
+        if (stream.eol() && state.lambda)
+          state.lambda = false;
+        return addErr ? style + " " + ERRORCLASS : style;
+      },
+
+      indent: function(state, textAfter) {
+        if (state.tokenize != tokenBase)
+          return state.tokenize.isString ? CodeMirror.Pass : 0;
+
+        var scope = top(state), closing = scope.type == textAfter.charAt(0)
+        if (scope.align != null)
+          return scope.align - (closing ? 1 : 0)
+        else
+          return scope.offset - (closing ? hangingIndent : 0)
+      },
+
+      electricInput: /^\s*[\}\]\)]$/,
+      closeBrackets: {triples: "'\""},
+      lineComment: "#",
+      fold: "indent"
+    };
+    return external;
+  });
+
+  CodeMirror.defineMIME("text/x-python", "python");
+
+  var words = function(str) { return str.split(" "); };
+
+  CodeMirror.defineMIME("text/x-cython", {
+    name: "python",
+    extra_keywords: words("by cdef cimport cpdef ctypedef enum except "+
+                          "extern gil include nogil property public "+
+                          "readonly struct union DEF IF ELIF ELSE")
+  });
+
+});
+
+},{"../../lib/codemirror":"node_modules/codemirror/lib/codemirror.js"}],"node_modules/codemirror/theme/blackboard.css":[function(require,module,exports) {
 
         var reloadCSS = require('_css_loader');
         module.hot.dispose(reloadCSS);
@@ -35945,9 +36699,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 // CodeMirror Shizz
+require('codemirror/lib/codemirror.css'); // Modes
+
+
 require('codemirror/mode/javascript/javascript.js');
 
-require('codemirror/lib/codemirror.css'); // Themes
+require('codemirror/mode/lua/lua.js');
+
+require('codemirror/mode/go/go.js');
+
+require('codemirror/mode/python/python.js'); // Themes
 
 
 require('codemirror/theme/blackboard.css');
@@ -35979,12 +36740,13 @@ function (_Component) {
     key: "render",
     value: function render() {
       var _this$props = this.props,
+          mode = _this$props.mode,
           theme = _this$props.theme,
           handleOnChange = _this$props.handleOnChange,
           color = _this$props.color;
       var options = {
         lineNumbers: false,
-        mode: 'javascript',
+        mode: mode,
         lineWrapping: true,
         theme: theme
       };
@@ -36017,7 +36779,7 @@ function (_Component) {
 
 var _default = CodeWrapper;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","react-codemirror2":"node_modules/react-codemirror2/index.js","codemirror/mode/javascript/javascript.js":"node_modules/codemirror/mode/javascript/javascript.js","codemirror/lib/codemirror.css":"node_modules/codemirror/lib/codemirror.css","codemirror/theme/blackboard.css":"node_modules/codemirror/theme/blackboard.css","codemirror/theme/monokai.css":"node_modules/codemirror/theme/monokai.css","codemirror/theme/material.css":"node_modules/codemirror/theme/material.css","codemirror/theme/mdn-like.css":"node_modules/codemirror/theme/mdn-like.css","codemirror/theme/xq-dark.css":"node_modules/codemirror/theme/xq-dark.css","codemirror/theme/duotone-dark.css":"node_modules/codemirror/theme/duotone-dark.css","codemirror/theme/duotone-light.css":"node_modules/codemirror/theme/duotone-light.css","./CodeWrapper.css":"src/components/CodeWrapper/CodeWrapper.css"}],"src/components/CodeWrapper/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-codemirror2":"node_modules/react-codemirror2/index.js","codemirror/lib/codemirror.css":"node_modules/codemirror/lib/codemirror.css","codemirror/mode/javascript/javascript.js":"node_modules/codemirror/mode/javascript/javascript.js","codemirror/mode/lua/lua.js":"node_modules/codemirror/mode/lua/lua.js","codemirror/mode/go/go.js":"node_modules/codemirror/mode/go/go.js","codemirror/mode/python/python.js":"node_modules/codemirror/mode/python/python.js","codemirror/theme/blackboard.css":"node_modules/codemirror/theme/blackboard.css","codemirror/theme/monokai.css":"node_modules/codemirror/theme/monokai.css","codemirror/theme/material.css":"node_modules/codemirror/theme/material.css","codemirror/theme/mdn-like.css":"node_modules/codemirror/theme/mdn-like.css","codemirror/theme/xq-dark.css":"node_modules/codemirror/theme/xq-dark.css","codemirror/theme/duotone-dark.css":"node_modules/codemirror/theme/duotone-dark.css","codemirror/theme/duotone-light.css":"node_modules/codemirror/theme/duotone-light.css","./CodeWrapper.css":"src/components/CodeWrapper/CodeWrapper.css"}],"src/components/CodeWrapper/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36102,11 +36864,11 @@ function (_Component) {
           key: i
         }, theme);
       });
-      return _react.default.createElement(_react.Fragment, null, _react.default.createElement("label", null, "Theme:", _react.default.createElement("select", {
+      return _react.default.createElement("select", {
         id: "theme-picker",
         name: "theme",
         onChange: this.props.changeTheme
-      }, options)));
+      }, options);
     }
   }]);
 
@@ -45750,12 +46512,12 @@ function (_Component) {
       });
       return _react.default.createElement("div", {
         className: "color-picker-wrapper"
-      }, _react.default.createElement("label", null, "Background:", _react.default.createElement("div", {
+      }, _react.default.createElement("div", {
         className: "color selected",
         style: {
           background: color
         }
-      })), this.state.showPicker && _react.default.createElement("div", {
+      }), this.state.showPicker && _react.default.createElement("div", {
         className: "color-picker",
         ref: function ref(picker) {
           return _this2.colorPicker = picker;
@@ -45805,7 +46567,94 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _default = _ColorPicker.default;
 exports.default = _default;
-},{"./ColorPicker":"src/components/ColorPicker/ColorPicker.js","./ColorPicker.css":"src/components/ColorPicker/ColorPicker.css"}],"node_modules/@fortawesome/fontawesome-free-brands/index.es.js":[function(require,module,exports) {
+},{"./ColorPicker":"src/components/ColorPicker/ColorPicker.js","./ColorPicker.css":"src/components/ColorPicker/ColorPicker.css"}],"src/components/ModeSelect/ModeSelect.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var ModeSelect =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(ModeSelect, _Component);
+
+  function ModeSelect() {
+    _classCallCheck(this, ModeSelect);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(ModeSelect).apply(this, arguments));
+  }
+
+  _createClass(ModeSelect, [{
+    key: "render",
+    value: function render() {
+      var changeMode = this.props.changeMode;
+      return _react.default.createElement("select", {
+        name: "mode",
+        onChange: changeMode
+      }, _react.default.createElement("option", {
+        value: "go"
+      }, "Go"), _react.default.createElement("option", {
+        value: "javascript",
+        defaultValue: true
+      }, "JavaScript"), _react.default.createElement("option", {
+        value: "lua"
+      }, "Lua"), _react.default.createElement("option", {
+        value: "python"
+      }, "Python"));
+    }
+  }]);
+
+  return ModeSelect;
+}(_react.Component);
+
+var _default = ModeSelect;
+exports.default = _default;
+},{"react":"node_modules/react/index.js"}],"src/components/ModeSelect/ModeSelect.css":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/ModeSelect/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ModeSelect = _interopRequireDefault(require("./ModeSelect"));
+
+require("./ModeSelect.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = _ModeSelect.default;
+exports.default = _default;
+},{"./ModeSelect":"src/components/ModeSelect/ModeSelect.js","./ModeSelect.css":"src/components/ModeSelect/ModeSelect.css"}],"node_modules/@fortawesome/fontawesome-free-brands/index.es.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -48478,6 +49327,8 @@ var _ThemePicker = _interopRequireDefault(require("../ThemePicker"));
 
 var _ColorPicker = _interopRequireDefault(require("../ColorPicker"));
 
+var _ModeSelect = _interopRequireDefault(require("../ModeSelect"));
+
 var _reactFontawesome = require("@fortawesome/react-fontawesome");
 
 var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
@@ -48522,6 +49373,7 @@ function (_Component) {
     value: function render() {
       var _this$props = this.props,
           color = _this$props.color,
+          changeMode = _this$props.changeMode,
           changeColor = _this$props.changeColor,
           changeTheme = _this$props.changeTheme,
           saveSnap = _this$props.saveSnap,
@@ -48532,12 +49384,16 @@ function (_Component) {
         className: "logo"
       }, "code", _react.default.createElement("span", {
         className: "accent"
-      }, "Snap")), _react.default.createElement(_ThemePicker.default, {
+      }, "Snap")), _react.default.createElement("div", {
+        className: "nav-group"
+      }, _react.default.createElement(_ModeSelect.default, {
+        changeMode: changeMode
+      }), _react.default.createElement(_ThemePicker.default, {
         changeTheme: changeTheme
       }), _react.default.createElement(_ColorPicker.default, {
         color: color,
         changeColor: changeColor
-      }), _react.default.createElement("button", {
+      })), _react.default.createElement("button", {
         className: "save-snap",
         onClick: saveSnap
       }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
@@ -48558,7 +49414,7 @@ function (_Component) {
 
 var _default = Nav;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","../ThemePicker":"src/components/ThemePicker/index.js","../ColorPicker":"src/components/ColorPicker/index.js","@fortawesome/react-fontawesome":"node_modules/@fortawesome/react-fontawesome/index.es.js","@fortawesome/free-solid-svg-icons":"node_modules/@fortawesome/free-solid-svg-icons/index.es.js","@fortawesome/fontawesome-free-brands":"node_modules/@fortawesome/fontawesome-free-brands/index.es.js"}],"src/components/Nav/Nav.css":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../ThemePicker":"src/components/ThemePicker/index.js","../ColorPicker":"src/components/ColorPicker/index.js","../ModeSelect":"src/components/ModeSelect/index.js","@fortawesome/react-fontawesome":"node_modules/@fortawesome/react-fontawesome/index.es.js","@fortawesome/free-solid-svg-icons":"node_modules/@fortawesome/free-solid-svg-icons/index.es.js","@fortawesome/fontawesome-free-brands":"node_modules/@fortawesome/fontawesome-free-brands/index.es.js"}],"src/components/Nav/Nav.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -68448,6 +69304,8 @@ var _CodeWrapper = _interopRequireDefault(require("../CodeWrapper"));
 
 var _Nav = _interopRequireDefault(require("../Nav"));
 
+var _ModeSelect = _interopRequireDefault(require("../ModeSelect"));
+
 var _axios = _interopRequireDefault(require("axios"));
 
 var _domToImage = _interopRequireDefault(require("dom-to-image"));
@@ -68499,6 +69357,7 @@ function (_Component) {
     return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(App)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
       color: '#34495e',
       theme: 'monokai',
+      mode: 'javascript',
       codeText: '// Pssst... Paste your code here'
     }, _this.handleOnChange = function (val) {
       _this.setState(function () {
@@ -68521,6 +69380,14 @@ function (_Component) {
       _this.setState(function () {
         return {
           theme: theme
+        };
+      });
+    }, _this.changeMode = function (e) {
+      var mode = e.target.value;
+
+      _this.setState(function () {
+        return {
+          mode: mode
         };
       });
     }, _this.saveSnap = function () {
@@ -68573,9 +69440,11 @@ function (_Component) {
         color: this.state.color,
         changeColor: this.changeColor,
         changeTheme: this.changeTheme,
+        changeMode: this.changeMode,
         saveSnap: this.saveSnap,
         shareSnap: this.shareSnap
       }), _react.default.createElement(_CodeWrapper.default, {
+        mode: this.state.mode,
         color: this.state.color,
         theme: this.state.theme,
         codeText: this.state.codeText,
@@ -68589,7 +69458,7 @@ function (_Component) {
 
 var _default = App;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","../CodeWrapper":"src/components/CodeWrapper/index.js","../Nav":"src/components/Nav/index.js","axios":"node_modules/axios/index.js","dom-to-image":"node_modules/dom-to-image/src/dom-to-image.js","file-saver":"node_modules/file-saver/dist/FileSaver.min.js","./App.css":"src/components/App/App.css"}],"src/components/App/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../CodeWrapper":"src/components/CodeWrapper/index.js","../Nav":"src/components/Nav/index.js","../ModeSelect":"src/components/ModeSelect/index.js","axios":"node_modules/axios/index.js","dom-to-image":"node_modules/dom-to-image/src/dom-to-image.js","file-saver":"node_modules/file-saver/dist/FileSaver.min.js","./App.css":"src/components/App/App.css"}],"src/components/App/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -68651,7 +69520,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60128" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50190" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

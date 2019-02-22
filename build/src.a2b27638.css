@@ -698,31 +698,20 @@ CodeMirror template by Jan T. Sott (https://github.com/idleberg), adapted by Bra
   right: 1px;
   bottom: 0;
 }
-select {
-  margin: 0 10px;
-  padding: 10px;
-  height: 40px;
-  border: none;
-  border-radius: 50px;
-  -webkit-box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
-          box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
-  font-weight: bold;
-  color: #eee;
-  background: #444;
-  cursor: pointer;
-}
-
 label {
   color: #999;
 }
 .color-picker-wrapper {
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .color-picker {
   position: absolute;
   top: 60px;
-  right: -17px;
+  right: -0;
   width: 230px;
   padding: 5px;
   background: #fff;
@@ -861,14 +850,14 @@ button {
   color: #fff;
 }
 
-label {
+.nav-group {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  margin: 0 15px;
+  margin-right: 25px;
 }
 body {
   font-family: sans-serif;
@@ -890,4 +879,18 @@ body {
   padding: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+select {
+  margin-right: 10px;
+  padding: 10px;
+  height: 40px;
+  border: none;
+  border-radius: 50px;
+  -webkit-box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  color: #eee;
+  background: #444;
+  cursor: pointer;
 }

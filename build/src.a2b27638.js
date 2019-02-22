@@ -34935,7 +34935,197 @@ module.exports = reloadCSS;
         module.hot.dispose(reloadCSS);
         module.hot.accept(reloadCSS);
       
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/codemirror/mode/javascript/javascript.js":[function(require,module,exports) {
+},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/codemirror/addon/edit/closebrackets.js":[function(require,module,exports) {
+var define;
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: https://codemirror.net/LICENSE
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+  var defaults = {
+    pairs: "()[]{}''\"\"",
+    triples: "",
+    explode: "[]{}"
+  };
+
+  var Pos = CodeMirror.Pos;
+
+  CodeMirror.defineOption("autoCloseBrackets", false, function(cm, val, old) {
+    if (old && old != CodeMirror.Init) {
+      cm.removeKeyMap(keyMap);
+      cm.state.closeBrackets = null;
+    }
+    if (val) {
+      ensureBound(getOption(val, "pairs"))
+      cm.state.closeBrackets = val;
+      cm.addKeyMap(keyMap);
+    }
+  });
+
+  function getOption(conf, name) {
+    if (name == "pairs" && typeof conf == "string") return conf;
+    if (typeof conf == "object" && conf[name] != null) return conf[name];
+    return defaults[name];
+  }
+
+  var keyMap = {Backspace: handleBackspace, Enter: handleEnter};
+  function ensureBound(chars) {
+    for (var i = 0; i < chars.length; i++) {
+      var ch = chars.charAt(i), key = "'" + ch + "'"
+      if (!keyMap[key]) keyMap[key] = handler(ch)
+    }
+  }
+  ensureBound(defaults.pairs + "`")
+
+  function handler(ch) {
+    return function(cm) { return handleChar(cm, ch); };
+  }
+
+  function getConfig(cm) {
+    var deflt = cm.state.closeBrackets;
+    if (!deflt || deflt.override) return deflt;
+    var mode = cm.getModeAt(cm.getCursor());
+    return mode.closeBrackets || deflt;
+  }
+
+  function handleBackspace(cm) {
+    var conf = getConfig(cm);
+    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
+
+    var pairs = getOption(conf, "pairs");
+    var ranges = cm.listSelections();
+    for (var i = 0; i < ranges.length; i++) {
+      if (!ranges[i].empty()) return CodeMirror.Pass;
+      var around = charsAround(cm, ranges[i].head);
+      if (!around || pairs.indexOf(around) % 2 != 0) return CodeMirror.Pass;
+    }
+    for (var i = ranges.length - 1; i >= 0; i--) {
+      var cur = ranges[i].head;
+      cm.replaceRange("", Pos(cur.line, cur.ch - 1), Pos(cur.line, cur.ch + 1), "+delete");
+    }
+  }
+
+  function handleEnter(cm) {
+    var conf = getConfig(cm);
+    var explode = conf && getOption(conf, "explode");
+    if (!explode || cm.getOption("disableInput")) return CodeMirror.Pass;
+
+    var ranges = cm.listSelections();
+    for (var i = 0; i < ranges.length; i++) {
+      if (!ranges[i].empty()) return CodeMirror.Pass;
+      var around = charsAround(cm, ranges[i].head);
+      if (!around || explode.indexOf(around) % 2 != 0) return CodeMirror.Pass;
+    }
+    cm.operation(function() {
+      var linesep = cm.lineSeparator() || "\n";
+      cm.replaceSelection(linesep + linesep, null);
+      cm.execCommand("goCharLeft");
+      ranges = cm.listSelections();
+      for (var i = 0; i < ranges.length; i++) {
+        var line = ranges[i].head.line;
+        cm.indentLine(line, null, true);
+        cm.indentLine(line + 1, null, true);
+      }
+    });
+  }
+
+  function contractSelection(sel) {
+    var inverted = CodeMirror.cmpPos(sel.anchor, sel.head) > 0;
+    return {anchor: new Pos(sel.anchor.line, sel.anchor.ch + (inverted ? -1 : 1)),
+            head: new Pos(sel.head.line, sel.head.ch + (inverted ? 1 : -1))};
+  }
+
+  function handleChar(cm, ch) {
+    var conf = getConfig(cm);
+    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
+
+    var pairs = getOption(conf, "pairs");
+    var pos = pairs.indexOf(ch);
+    if (pos == -1) return CodeMirror.Pass;
+    var triples = getOption(conf, "triples");
+
+    var identical = pairs.charAt(pos + 1) == ch;
+    var ranges = cm.listSelections();
+    var opening = pos % 2 == 0;
+
+    var type;
+    for (var i = 0; i < ranges.length; i++) {
+      var range = ranges[i], cur = range.head, curType;
+      var next = cm.getRange(cur, Pos(cur.line, cur.ch + 1));
+      if (opening && !range.empty()) {
+        curType = "surround";
+      } else if ((identical || !opening) && next == ch) {
+        if (identical && stringStartsAfter(cm, cur))
+          curType = "both";
+        else if (triples.indexOf(ch) >= 0 && cm.getRange(cur, Pos(cur.line, cur.ch + 3)) == ch + ch + ch)
+          curType = "skipThree";
+        else
+          curType = "skip";
+      } else if (identical && cur.ch > 1 && triples.indexOf(ch) >= 0 &&
+                 cm.getRange(Pos(cur.line, cur.ch - 2), cur) == ch + ch) {
+        if (cur.ch > 2 && /\bstring/.test(cm.getTokenTypeAt(Pos(cur.line, cur.ch - 2)))) return CodeMirror.Pass;
+        curType = "addFour";
+      } else if (identical) {
+        var prev = cur.ch == 0 ? " " : cm.getRange(Pos(cur.line, cur.ch - 1), cur)
+        if (!CodeMirror.isWordChar(next) && prev != ch && !CodeMirror.isWordChar(prev)) curType = "both";
+        else return CodeMirror.Pass;
+      } else if (opening) {
+        curType = "both";
+      } else {
+        return CodeMirror.Pass;
+      }
+      if (!type) type = curType;
+      else if (type != curType) return CodeMirror.Pass;
+    }
+
+    var left = pos % 2 ? pairs.charAt(pos - 1) : ch;
+    var right = pos % 2 ? ch : pairs.charAt(pos + 1);
+    cm.operation(function() {
+      if (type == "skip") {
+        cm.execCommand("goCharRight");
+      } else if (type == "skipThree") {
+        for (var i = 0; i < 3; i++)
+          cm.execCommand("goCharRight");
+      } else if (type == "surround") {
+        var sels = cm.getSelections();
+        for (var i = 0; i < sels.length; i++)
+          sels[i] = left + sels[i] + right;
+        cm.replaceSelections(sels, "around");
+        sels = cm.listSelections().slice();
+        for (var i = 0; i < sels.length; i++)
+          sels[i] = contractSelection(sels[i]);
+        cm.setSelections(sels);
+      } else if (type == "both") {
+        cm.replaceSelection(left + right, null);
+        cm.triggerElectric(left + right);
+        cm.execCommand("goCharLeft");
+      } else if (type == "addFour") {
+        cm.replaceSelection(left + left + left + left, "before");
+        cm.execCommand("goCharRight");
+      }
+    });
+  }
+
+  function charsAround(cm, pos) {
+    var str = cm.getRange(Pos(pos.line, pos.ch - 1),
+                          Pos(pos.line, pos.ch + 1));
+    return str.length == 2 ? str : null;
+  }
+
+  function stringStartsAfter(cm, pos) {
+    var token = cm.getTokenAt(Pos(pos.line, pos.ch + 1))
+    return /\bstring/.test(token.type) && token.start == pos.ch &&
+      (pos.ch == 0 || !/\bstring/.test(cm.getTokenTypeAt(pos)))
+  }
+});
+
+},{"../../lib/codemirror":"node_modules/codemirror/lib/codemirror.js"}],"node_modules/codemirror/mode/javascript/javascript.js":[function(require,module,exports) {
 var define;
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
@@ -36664,7 +36854,7 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/CodeWrapper/CodeWrapper.js":[function(require,module,exports) {
+},{"./..\\..\\FiraCode-Regular.ttf":[["FiraCode-Regular.0f737178.ttf","src/FiraCode-Regular.ttf"],"src/FiraCode-Regular.ttf"],"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/CodeWrapper/CodeWrapper.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36698,8 +36888,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-// CodeMirror Shizz
-require('codemirror/lib/codemirror.css'); // Modes
+// CodeMirror CSS
+require('codemirror/lib/codemirror.css'); // Auto close brackets
+
+
+require('codemirror/addon/edit/closebrackets.js'); // Modes
 
 
 require('codemirror/mode/javascript/javascript.js');
@@ -36748,20 +36941,13 @@ function (_Component) {
         lineNumbers: false,
         mode: mode,
         lineWrapping: true,
+        autoCloseBrackets: true,
         theme: theme
       };
       var bgColor = {
         background: color
       };
       return _react.default.createElement("div", {
-        className: "transparent"
-      }, _react.default.createElement("div", {
-        style: bgColor,
-        className: "cover"
-      }), _react.default.createElement("div", {
-        style: bgColor,
-        className: "cover2"
-      }), _react.default.createElement("div", {
         style: bgColor,
         className: "code-wrapper"
       }, _react.default.createElement(_reactCodemirror.Controlled, {
@@ -36770,7 +36956,7 @@ function (_Component) {
         onBeforeChange: function onBeforeChange(editor, data, value) {
           handleOnChange(value);
         }
-      })));
+      }));
     }
   }]);
 
@@ -36779,7 +36965,7 @@ function (_Component) {
 
 var _default = CodeWrapper;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","react-codemirror2":"node_modules/react-codemirror2/index.js","codemirror/lib/codemirror.css":"node_modules/codemirror/lib/codemirror.css","codemirror/mode/javascript/javascript.js":"node_modules/codemirror/mode/javascript/javascript.js","codemirror/mode/lua/lua.js":"node_modules/codemirror/mode/lua/lua.js","codemirror/mode/go/go.js":"node_modules/codemirror/mode/go/go.js","codemirror/mode/python/python.js":"node_modules/codemirror/mode/python/python.js","codemirror/theme/blackboard.css":"node_modules/codemirror/theme/blackboard.css","codemirror/theme/monokai.css":"node_modules/codemirror/theme/monokai.css","codemirror/theme/material.css":"node_modules/codemirror/theme/material.css","codemirror/theme/mdn-like.css":"node_modules/codemirror/theme/mdn-like.css","codemirror/theme/xq-dark.css":"node_modules/codemirror/theme/xq-dark.css","codemirror/theme/duotone-dark.css":"node_modules/codemirror/theme/duotone-dark.css","codemirror/theme/duotone-light.css":"node_modules/codemirror/theme/duotone-light.css","./CodeWrapper.css":"src/components/CodeWrapper/CodeWrapper.css"}],"src/components/CodeWrapper/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-codemirror2":"node_modules/react-codemirror2/index.js","codemirror/lib/codemirror.css":"node_modules/codemirror/lib/codemirror.css","codemirror/addon/edit/closebrackets.js":"node_modules/codemirror/addon/edit/closebrackets.js","codemirror/mode/javascript/javascript.js":"node_modules/codemirror/mode/javascript/javascript.js","codemirror/mode/lua/lua.js":"node_modules/codemirror/mode/lua/lua.js","codemirror/mode/go/go.js":"node_modules/codemirror/mode/go/go.js","codemirror/mode/python/python.js":"node_modules/codemirror/mode/python/python.js","codemirror/theme/blackboard.css":"node_modules/codemirror/theme/blackboard.css","codemirror/theme/monokai.css":"node_modules/codemirror/theme/monokai.css","codemirror/theme/material.css":"node_modules/codemirror/theme/material.css","codemirror/theme/mdn-like.css":"node_modules/codemirror/theme/mdn-like.css","codemirror/theme/xq-dark.css":"node_modules/codemirror/theme/xq-dark.css","codemirror/theme/duotone-dark.css":"node_modules/codemirror/theme/duotone-dark.css","codemirror/theme/duotone-light.css":"node_modules/codemirror/theme/duotone-light.css","./CodeWrapper.css":"src/components/CodeWrapper/CodeWrapper.css"}],"src/components/CodeWrapper/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -69389,31 +69575,32 @@ function (_Component) {
         };
       });
     }, _this.saveSnap = function () {
-      var wrapper = document.querySelector('.transparent');
-      var scale = 2;
+      var wrapper = document.querySelector('.code-wrapper');
+      var scale = 1.2;
 
       _domToImage.default.toBlob(wrapper, {
         style: {
           margin: '0',
-          transform: 'scale(1.4)',
+          transform: "scale(".concat(scale, ")"),
           transformOrigin: 'top left'
         },
-        width: wrapper.clientWidth * 1.4,
-        height: wrapper.clientHeight * 1.4
+        width: wrapper.clientWidth * scale,
+        height: wrapper.clientHeight * scale
       }).then(function (blob) {
         (0, _fileSaver.saveAs)(blob, 'code-snap.png');
       });
     }, _this.shareSnap = function () {
-      var wrapper = document.querySelector('.transparent');
+      var wrapper = document.querySelector('.code-wrapper');
+      var scale = 1.2;
 
       _domToImage.default.toBlob(wrapper, {
         style: {
           margin: '0',
-          transform: 'scale(1.4)',
+          transform: "scale(".concat(scale, ")"),
           transformOrigin: 'top left'
         },
-        width: wrapper.clientWidth * 1.4,
-        height: wrapper.clientHeight * 1.4
+        width: wrapper.clientWidth * scale,
+        height: wrapper.clientHeight * scale
       }).then(function (blob) {
         var formData = new FormData();
         formData.append('upl', blob);
@@ -69518,7 +69705,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50190" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55160" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

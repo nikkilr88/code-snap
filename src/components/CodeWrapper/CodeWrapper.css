@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Inconsolata');
+@font-face {
+  font-family: FiraCode;
+  src: url('../../FiraCode-Regular.ttf');
+}
 
 .CodeMirror {
   height: auto;
@@ -6,7 +10,8 @@
   text-align: left;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
   font-size: 17px;
-  font-family: 'Inconsolata', monospace;
+  font-family: 'FiraCode', 'Inconsolata', monospace;
+  font-variant-ligatures: contextual;
 }
 
 .CodeMirror-scroll {
@@ -18,40 +23,9 @@
 }
 
 .code-wrapper {
+  margin: 100px auto 0 auto;
   padding: 50px;
-}
-
-.transparent {
-  padding: 1px;
-  background: transparent;
-  position: relative;
-  left: 0;
-  right: 0;
-  margin: 100px auto;
-  color: #fcfcfc;
   width: auto;
   max-width: 700px;
   display: table;
-}
-
-/* 
-  Cover transparent background to only leave one transparent pixel 
-  Avoid JPG compression on Twitter
-*/
-.cover {
-  position: absolute;
-  content: '';
-  height: 100%;
-  width: 100%;
-  right: 0;
-  bottom: 1px;
-}
-
-.cover2 {
-  position: absolute;
-  content: '';
-  height: 100%;
-  width: 100%;
-  right: 1px;
-  bottom: 0;
 }

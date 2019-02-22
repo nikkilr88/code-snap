@@ -69304,8 +69304,6 @@ var _CodeWrapper = _interopRequireDefault(require("../CodeWrapper"));
 
 var _Nav = _interopRequireDefault(require("../Nav"));
 
-var _ModeSelect = _interopRequireDefault(require("../ModeSelect"));
-
 var _axios = _interopRequireDefault(require("axios"));
 
 var _domToImage = _interopRequireDefault(require("dom-to-image"));
@@ -69458,7 +69456,7 @@ function (_Component) {
 
 var _default = App;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","../CodeWrapper":"src/components/CodeWrapper/index.js","../Nav":"src/components/Nav/index.js","../ModeSelect":"src/components/ModeSelect/index.js","axios":"node_modules/axios/index.js","dom-to-image":"node_modules/dom-to-image/src/dom-to-image.js","file-saver":"node_modules/file-saver/dist/FileSaver.min.js","./App.css":"src/components/App/App.css"}],"src/components/App/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../CodeWrapper":"src/components/CodeWrapper/index.js","../Nav":"src/components/Nav/index.js","axios":"node_modules/axios/index.js","dom-to-image":"node_modules/dom-to-image/src/dom-to-image.js","file-saver":"node_modules/file-saver/dist/FileSaver.min.js","./App.css":"src/components/App/App.css"}],"src/components/App/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

@@ -46614,12 +46614,12 @@ function (_Component) {
       var changeMode = this.props.changeMode;
       return _react.default.createElement("select", {
         name: "mode",
-        onChange: changeMode
+        onChange: changeMode,
+        defaultValue: "javascript"
       }, _react.default.createElement("option", {
         value: "go"
       }, "Go"), _react.default.createElement("option", {
-        value: "javascript",
-        defaultValue: true
+        value: "javascript"
       }, "JavaScript"), _react.default.createElement("option", {
         value: "lua"
       }, "Lua"), _react.default.createElement("option", {

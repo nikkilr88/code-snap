@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
-// CodeMirror Shizz
+// CodeMirror CSS
 require('codemirror/lib/codemirror.css')
+
+// Auto close brackets
+require('codemirror/addon/edit/closebrackets.js')
 
 // Modes
 require('codemirror/mode/javascript/javascript.js')
@@ -29,6 +32,7 @@ class CodeWrapper extends Component {
       lineNumbers: false,
       mode: mode,
       lineWrapping: true,
+      autoCloseBrackets: true,
       theme: theme
     }
 
@@ -37,18 +41,14 @@ class CodeWrapper extends Component {
     }
 
     return (
-      <div className="transparent">
-        <div style={bgColor} className="cover" />
-        <div style={bgColor} className="cover2" />
-        <div style={bgColor} className="code-wrapper">
-          <CodeMirror
-            value={this.props.codeText}
-            options={options}
-            onBeforeChange={(editor, data, value) => {
-              handleOnChange(value)
-            }}
-          />
-        </div>
+      <div style={bgColor} className="code-wrapper">
+        <CodeMirror
+          value={this.props.codeText}
+          options={options}
+          onBeforeChange={(editor, data, value) => {
+            handleOnChange(value)
+          }}
+        />
       </div>
     )
   }

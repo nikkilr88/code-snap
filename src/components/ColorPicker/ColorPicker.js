@@ -56,10 +56,7 @@ class ColorPicker extends Component {
     ))
     return (
       <div className="color-picker-wrapper">
-        <label>
-          Background:
-          <div className="color selected" style={{ background: color }} />
-        </label>
+        <div className="color selected" style={{ background: color }} />
 
         {this.state.showPicker && (
           <div

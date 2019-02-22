@@ -37,17 +37,17 @@ class App extends Component {
   }
 
   saveSnap = () => {
-    const wrapper = document.querySelector('.transparent')
-    const scale = 2
+    const wrapper = document.querySelector('.code-wrapper')
+    const scale = 1.2
     domtoimage
       .toBlob(wrapper, {
         style: {
           margin: '0',
-          transform: 'scale(1.4)',
+          transform: `scale(${scale})`,
           transformOrigin: 'top left'
         },
-        width: wrapper.clientWidth * 1.4,
-        height: wrapper.clientHeight * 1.4
+        width: wrapper.clientWidth * scale,
+        height: wrapper.clientHeight * scale
       })
       .then(blob => {
         saveAs(blob, 'code-snap.png')
@@ -55,16 +55,17 @@ class App extends Component {
   }
 
   shareSnap = () => {
-    const wrapper = document.querySelector('.transparent')
+    const wrapper = document.querySelector('.code-wrapper')
+    const scale = 1.2
     domtoimage
       .toBlob(wrapper, {
         style: {
           margin: '0',
-          transform: 'scale(1.4)',
+          transform: `scale(${scale})`,
           transformOrigin: 'top left'
         },
-        width: wrapper.clientWidth * 1.4,
-        height: wrapper.clientHeight * 1.4
+        width: wrapper.clientWidth * scale,
+        height: wrapper.clientHeight * scale
       })
       .then(blob => {
         const formData = new FormData()

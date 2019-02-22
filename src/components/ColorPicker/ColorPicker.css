@@ -1,11 +1,12 @@
 .color-picker-wrapper {
   position: relative;
+  display: flex;
 }
 
 .color-picker {
   position: absolute;
   top: 60px;
-  right: -17px;
+  right: -31px;
   width: 230px;
   padding: 5px;
   background: #fff;

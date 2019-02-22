@@ -2,8 +2,13 @@ import React, { Component } from 'react'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
 // CodeMirror Shizz
-require('codemirror/mode/javascript/javascript.js')
 require('codemirror/lib/codemirror.css')
+
+// Modes
+require('codemirror/mode/javascript/javascript.js')
+require('codemirror/mode/lua/lua.js')
+require('codemirror/mode/go/go.js')
+require('codemirror/mode/python/python.js')
 
 // Themes
 require('codemirror/theme/blackboard.css')
@@ -18,11 +23,11 @@ import './CodeWrapper.css'
 
 class CodeWrapper extends Component {
   render() {
-    const { theme, handleOnChange, color } = this.props
+    const { mode, theme, handleOnChange, color } = this.props
 
     const options = {
       lineNumbers: false,
-      mode: 'javascript',
+      mode: mode,
       lineWrapping: true,
       theme: theme
     }
@@ -30,6 +35,7 @@ class CodeWrapper extends Component {
     const bgColor = {
       background: color
     }
+
     return (
       <div className="transparent">
         <div style={bgColor} className="cover" />

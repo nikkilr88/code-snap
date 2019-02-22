@@ -12,6 +12,7 @@ class App extends Component {
   state = {
     color: '#34495e',
     theme: 'monokai',
+    mode: 'javascript',
     codeText: '// Pssst... Paste your code here'
   }
 
@@ -28,6 +29,11 @@ class App extends Component {
   changeTheme = e => {
     const theme = e.target.value
     this.setState(() => ({ theme }))
+  }
+
+  changeMode = e => {
+    const mode = e.target.value
+    this.setState(() => ({ mode }))
   }
 
   saveSnap = () => {
@@ -87,11 +93,13 @@ class App extends Component {
           color={this.state.color}
           changeColor={this.changeColor}
           changeTheme={this.changeTheme}
+          changeMode={this.changeMode}
           saveSnap={this.saveSnap}
           shareSnap={this.shareSnap}
         />
 
         <CodeWrapper
+          mode={this.state.mode}
           color={this.state.color}
           theme={this.state.theme}
           codeText={this.state.codeText}

@@ -20,18 +20,9 @@ class ThemePicker extends Component {
       </option>
     ))
     return (
-      <Fragment>
-        <label>
-          Theme:
-          <select
-            id="theme-picker"
-            name="theme"
-            onChange={this.props.changeTheme}
-          >
-            {options}
-          </select>
-        </label>
-      </Fragment>
+      <select id="theme-picker" name="theme" onChange={this.props.changeTheme}>
+        {options}
+      </select>
     )
   }
 }

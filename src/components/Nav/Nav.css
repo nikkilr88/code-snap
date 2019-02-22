@@ -39,8 +39,8 @@ button {
   color: #fff;
 }
 
-label {
+.nav-group {
   display: flex;
   align-items: center;
-  margin: 0 15px;
+  margin-right: 25px;
 }

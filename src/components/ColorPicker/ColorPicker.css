@@ -5,8 +5,8 @@
 
 .color-picker {
   position: absolute;
-  top: 60px;
-  right: -31px;
+  top: 55px;
+  right: -34px;
   width: 230px;
   padding: 5px;
   background: #fff;
@@ -37,15 +37,16 @@
 }
 
 .color {
+  margin: 3px;
   display: inline-block;
   height: 40px;
   width: 40px;
-  margin: 5px;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .color.selected {
+  margin: 0;
   border: 2px solid #444;
 }
 

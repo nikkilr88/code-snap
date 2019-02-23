@@ -49579,7 +49579,9 @@ function (_Component) {
       }), _react.default.createElement(_ColorPicker.default, {
         color: color,
         changeColor: changeColor
-      })), _react.default.createElement("button", {
+      })), _react.default.createElement("div", {
+        className: "nav-group"
+      }, _react.default.createElement("button", {
         className: "save-snap",
         onClick: saveSnap
       }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
@@ -49591,7 +49593,7 @@ function (_Component) {
       }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
         className: "font-awesome",
         icon: _fontawesomeFreeBrands.faTwitter
-      }), "Share"));
+      }), "Share")));
     }
   }]);
 
@@ -69705,7 +69707,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55160" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61652" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

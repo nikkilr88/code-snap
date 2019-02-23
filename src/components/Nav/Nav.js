@@ -28,14 +28,16 @@ class Nav extends Component {
           <ColorPicker color={color} changeColor={changeColor} />
         </div>
 
-        <button className="save-snap" onClick={saveSnap}>
-          <FontAwesomeIcon className="font-awesome" icon={faDownload} />
-        </button>
+        <div className="nav-group">
+          <button className="save-snap" onClick={saveSnap}>
+            <FontAwesomeIcon className="font-awesome" icon={faDownload} />
+          </button>
 
-        <button className="share-twitter" onClick={shareSnap}>
-          <FontAwesomeIcon className="font-awesome" icon={faTwitter} />
-          Share
-        </button>
+          <button className="share-twitter" onClick={shareSnap}>
+            <FontAwesomeIcon className="font-awesome" icon={faTwitter} />
+            Share
+          </button>
+        </div>
       </nav>
     )
   }

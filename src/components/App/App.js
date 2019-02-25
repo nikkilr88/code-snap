@@ -36,55 +36,45 @@ class App extends Component {
     this.setState(() => ({ mode }))
   }
 
-  saveSnap = () => {
+  domToImage = () => {
     const wrapper = document.querySelector('.code-wrapper')
     const scale = 1.2
-    domtoimage
-      .toBlob(wrapper, {
-        style: {
-          margin: '0',
-          transform: `scale(${scale})`,
-          transformOrigin: 'top left'
-        },
-        width: wrapper.clientWidth * scale,
-        height: wrapper.clientHeight * scale
-      })
-      .then(blob => {
-        saveAs(blob, 'code-snap.png')
-      })
+    return domtoimage.toBlob(wrapper, {
+      style: {
+        margin: '0',
+        transform: `scale(${scale})`,
+        transformOrigin: 'top left'
+      },
+      width: wrapper.clientWidth * scale,
+      height: wrapper.clientHeight * scale
+    })
+  }
+
+  saveSnap = () => {
+    this.domToImage().then(blob => {
+      saveAs(blob, 'code-snap.png')
+    })
   }
 
   shareSnap = () => {
-    const wrapper = document.querySelector('.code-wrapper')
-    const scale = 1.2
-    domtoimage
-      .toBlob(wrapper, {
-        style: {
-          margin: '0',
-          transform: `scale(${scale})`,
-          transformOrigin: 'top left'
-        },
-        width: wrapper.clientWidth * scale,
-        height: wrapper.clientHeight * scale
-      })
-      .then(blob => {
-        const formData = new FormData()
-        formData.append('upl', blob)
+    this.domToImage().then(blob => {
+      const formData = new FormData()
+      formData.append('upl', blob)
 
-        fetch('https://code-snap.glitch.me/', {
-          method: 'POST',
-          body: formData
-        })
-          .then(res => res.json())
-          .then(data => {
-            window.open(
-              `https://twitter.com/intent/tweet?text=${data.imageURL}`,
-              '_blank',
-              'width=600,height=300'
-            )
-          })
-          .catch(err => console.log('Opps, something went wrong...'))
+      fetch('https://code-snap.glitch.me/', {
+        method: 'POST',
+        body: formData
       })
+        .then(res => res.json())
+        .then(data => {
+          window.open(
+            `https://twitter.com/intent/tweet?text=${data.imageURL}`,
+            '_blank',
+            'width=600,height=300'
+          )
+        })
+        .catch(err => console.log('Opps, something went wrong...'))
+    })
   }
 
   render() {

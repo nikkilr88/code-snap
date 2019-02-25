@@ -1,10 +1,13 @@
 .nav {
+  position: sticky;
+  top: 0;
   padding: 15px 100px;
   background: #2b2b2b;
   border-bottom: 2px solid #eee;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  z-index: 999;
 }
 
 .logo {

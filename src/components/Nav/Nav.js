@@ -18,23 +18,23 @@ class Nav extends Component {
       shareSnap
     } = this.props
     return (
-      <nav className="nav">
-        <p className="logo">
-          code<span className="accent">Snap</span>
-        </p>
-        <div className="nav-group">
+      <nav className='nav'>
+        <span className='logo'>
+          code<span className='accent'>Snap</span>
+        </span>
+        <div className='nav-group'>
           <ModeSelect changeMode={changeMode} />
           <ThemePicker changeTheme={changeTheme} />
           <ColorPicker color={color} changeColor={changeColor} />
         </div>
 
-        <div className="nav-group">
-          <button className="save-snap" onClick={saveSnap}>
-            <FontAwesomeIcon className="font-awesome" icon={faDownload} />
+        <div className='nav-group'>
+          <button className='save-snap' onClick={saveSnap}>
+            <FontAwesomeIcon className='font-awesome' icon={faDownload} />
           </button>
 
-          <button className="share-twitter" onClick={shareSnap}>
-            <FontAwesomeIcon className="font-awesome" icon={faTwitter} />
+          <button className='share-twitter' onClick={shareSnap}>
+            <FontAwesomeIcon className='font-awesome' icon={faTwitter} />
             Share
           </button>
         </div>

@@ -11,7 +11,7 @@
   padding: 5px;
   background: #fff;
   border-radius: 5px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
@@ -51,7 +51,7 @@
 }
 
 .selected {
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
 }
 
 .input-wrapper {

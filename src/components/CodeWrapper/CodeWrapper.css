@@ -8,9 +8,10 @@
   height: auto;
   width: auto;
   text-align: left;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
   font-size: 17px;
-  font-family: 'FiraCode', 'Inconsolata', monospace;
+  /* font-family: 'FiraCode', 'Inconsolata', monospace; */
+  font-family: 'Inconsolata', monospace;
   font-variant-ligatures: contextual;
 }
 

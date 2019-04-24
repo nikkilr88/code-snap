@@ -1,7 +1,7 @@
 .nav {
   position: sticky;
   top: 0;
-  padding: 15px 100px;
+  padding: 25px 100px;
   background: #2b2b2b;
   border-bottom: 2px solid #eee;
   display: flex;
@@ -28,17 +28,17 @@ button {
   border: none;
   font-weight: bold;
   border-radius: 100px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 
 .save-snap {
-  background: #e74c3c;
+  background: linear-gradient(to bottom right, #e67e22, #e74c3c);
   color: #fff;
 }
 
 .share-twitter {
-  background: #00acee;
+  background: linear-gradient(to bottom right, #00acee, #2980b9);
   color: #fff;
 }
 

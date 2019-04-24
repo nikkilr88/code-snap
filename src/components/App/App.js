@@ -21,7 +21,6 @@ class App extends Component {
   }
 
   changeColor = e => {
-    console.log(e.target.value)
     const color = e.target.dataset.color || '#' + e.target.value
     this.setState(() => ({ color }))
   }

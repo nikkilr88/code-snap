@@ -52453,7 +52453,7 @@ function (_Component) {
           shareSnap = _this$props.shareSnap;
       return _react.default.createElement("nav", {
         className: "nav"
-      }, _react.default.createElement("p", {
+      }, _react.default.createElement("span", {
         className: "logo"
       }, "code", _react.default.createElement("span", {
         className: "accent"
@@ -72439,7 +72439,6 @@ function (_Component) {
         };
       });
     }, _this.changeColor = function (e) {
-      console.log(e.target.value);
       var color = e.target.dataset.color || '#' + e.target.value;
 
       _this.setState(function () {
@@ -72584,7 +72583,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52967" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65395" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

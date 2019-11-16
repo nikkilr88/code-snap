@@ -23,6 +23,10 @@
   padding: 15px !important;
 }
 
+pre.CodeMirror-line {
+  padding: 4px !important;
+}
+
 .code-wrapper {
   margin: 100px auto 50px auto;
   padding: 50px;

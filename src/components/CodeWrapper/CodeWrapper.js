@@ -27,6 +27,7 @@ require('codemirror/theme/darcula.css')
 require('codemirror/theme/dracula.css')
 require('codemirror/theme/icecoder.css')
 
+// Styles
 import './CodeWrapper.css'
 
 class CodeWrapper extends Component {
@@ -36,6 +37,7 @@ class CodeWrapper extends Component {
     const options = {
       mode: mode,
       theme: theme,
+      defaultTextHeight: 20,
       lineNumbers: false,
       lineWrapping: true,
       autoCloseBrackets: true

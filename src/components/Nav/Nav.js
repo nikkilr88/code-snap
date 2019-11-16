@@ -1,8 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+
+// Components
 import ThemePicker from '../ThemePicker'
 import ColorPicker from '../ColorPicker'
 import ModeSelect from '../ModeSelect'
+import Loader from '../Loader'
 
+// Icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload } from '@fortawesome/free-solid-svg-icons'
 import { faTwitter } from '@fortawesome/fontawesome-free-brands'
@@ -15,27 +19,34 @@ class Nav extends Component {
       changeColor,
       changeTheme,
       saveSnap,
-      shareSnap
+      shareSnap,
+      uploading
     } = this.props
     return (
-      <nav className='nav'>
-        <span className='logo'>
-          code<span className='accent'>Snap</span>
+      <nav className="nav">
+        <span className="logo">
+          code<span className="accent">Snap</span>
         </span>
-        <div className='nav-group'>
+        <div className="nav-group">
           <ModeSelect changeMode={changeMode} />
           <ThemePicker changeTheme={changeTheme} />
           <ColorPicker color={color} changeColor={changeColor} />
         </div>
 
-        <div className='nav-group'>
-          <button className='save-snap' onClick={saveSnap}>
-            <FontAwesomeIcon className='font-awesome' icon={faDownload} />
+        <div className="nav-group">
+          <button className="save-snap" onClick={saveSnap}>
+            <FontAwesomeIcon className="font-awesome" icon={faDownload} />
           </button>
 
-          <button className='share-twitter' onClick={shareSnap}>
-            <FontAwesomeIcon className='font-awesome' icon={faTwitter} />
-            Share
+          <button className="share-twitter" onClick={shareSnap}>
+            {!uploading ? (
+              <Fragment>
+                <FontAwesomeIcon className="font-awesome" icon={faTwitter} />
+                Share
+              </Fragment>
+            ) : (
+              <Loader />
+            )}
           </button>
         </div>
       </nav>

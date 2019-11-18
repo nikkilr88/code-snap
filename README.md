@@ -7,6 +7,7 @@ Website: https://codesnap.netlify.com
 ### Built With
 
 - [React](https://reactjs.org/)
+  - Hooks
 - [Parcel](https://parceljs.org)
 - [Node.js](https://nodejs.org/en/)
   - [Express](https://expressjs.com/)

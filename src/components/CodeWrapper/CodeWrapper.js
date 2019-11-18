@@ -1,4 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, useContext } from 'react'
+
+// Contexts
+import { AppContext } from '../../contexts/appContext'
+
+// Third-party libraries
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
 // CodeMirror CSS
@@ -30,35 +35,33 @@ require('codemirror/theme/icecoder.css')
 // Styles
 import './CodeWrapper.css'
 
-class CodeWrapper extends Component {
-  render() {
-    const { mode, theme, handleOnChange, color } = this.props
+const CodeWrapper = () => {
+  const { mode, theme, color, codeText, setCodeText } = useContext(AppContext)
 
-    const options = {
-      mode: mode,
-      theme: theme,
-      defaultTextHeight: 20,
-      lineNumbers: false,
-      lineWrapping: true,
-      autoCloseBrackets: true
-    }
-
-    const bgColor = {
-      background: color
-    }
-
-    return (
-      <div style={bgColor} className="code-wrapper">
-        <CodeMirror
-          value={this.props.codeText}
-          options={options}
-          onBeforeChange={(editor, data, value) => {
-            handleOnChange(value)
-          }}
-        />
-      </div>
-    )
+  const options = {
+    mode: mode,
+    theme: theme,
+    defaultTextHeight: 20,
+    lineNumbers: false,
+    lineWrapping: true,
+    autoCloseBrackets: true
   }
+
+  const bgColor = {
+    background: color
+  }
+
+  return (
+    <div style={bgColor} className="code-wrapper">
+      <CodeMirror
+        value={codeText}
+        options={options}
+        onBeforeChange={(editor, data, value) => {
+          setCodeText(value)
+        }}
+      />
+    </div>
+  )
 }
 
 export default CodeWrapper

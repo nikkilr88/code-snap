@@ -1,4 +1,3 @@
-import App from './App'
-import './App.css'
+import App from './App.component'
 
 export default App

@@ -27,6 +27,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     background: #f7f7f7;
+    font-family: sans-serif;
   }
 
   * {

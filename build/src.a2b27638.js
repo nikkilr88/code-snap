@@ -32594,7 +32594,7 @@ var AppProvider = function AppProvider(props) {
 
   var domToImage = function domToImage() {
     var wrapper = document.querySelector('.code-wrapper');
-    var scale = 1.5;
+    var scale = 2;
     return _domToImage.default.toBlob(wrapper, {
       style: {
         margin: '0',
@@ -52119,7 +52119,7 @@ var _styledComponents = _interopRequireDefault(require("styled-components"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  &.code-wrapper {\n    margin: 100px auto 50px auto;\n    padding: 50px;\n    width: auto;\n    max-width: 700px;\n    display: table;\n    background: ", ";\n  }\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 18px;\n    /* font-family: 'FiraCode', 'Inconsolata', monospace; */\n    font-family: 'Inconsolata', monospace;\n    font-variant-ligatures: contextual;\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 10px !important;\n  }\n\n  /* pre.CodeMirror-line {\n    padding: 4px !important;\n  } */\n"]);
+  var data = _taggedTemplateLiteral(["\n  &.code-wrapper {\n    margin: 100px auto 50px auto;\n    padding: 50px;\n    width: auto;\n    max-width: 700px;\n    display: table;\n    background: ", ";\n  }\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 18px;\n    line-height: 1.5;\n    font-family: 'FiraCode', monospace;\n    font-family: monospace;\n    font-variant-ligatures: contextual;\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-selected {\n    width: 100% !important;\n    left: 0 !important;\n    right: 0 !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 10px !important;\n  }\n\n  /* pre.CodeMirror-line {\n    padding: 4px !important;\n  } */\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -65048,7 +65048,7 @@ var _styledComponents = require("styled-components");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  @font-face {\n    font-family: 'FiraCode';\n    src: url('", "') format('truetype');\n  }\n\n  @font-face {\n    font-family: 'Inconsolata';\n    src: url('", "') format('truetype');\n  }\n\n  body {\n    background: #f7f7f7;\n  }\n\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  select {\n    margin-right: 10px;\n    padding: 10px;\n    height: 40px;\n    border: none;\n    border-radius: 50px;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-weight: bold;\n    color: #eee;\n    background: #444;\n    cursor: pointer;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  @font-face {\n    font-family: 'FiraCode';\n    src: url('", "') format('truetype');\n  }\n\n  @font-face {\n    font-family: 'Inconsolata';\n    src: url('", "') format('truetype');\n  }\n\n  body {\n    background: #f7f7f7;\n    font-family: sans-serif;\n  }\n\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  select {\n    margin-right: 10px;\n    padding: 10px;\n    height: 40px;\n    border: none;\n    border-radius: 50px;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-weight: bold;\n    color: #eee;\n    background: #444;\n    cursor: pointer;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -65090,7 +65090,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61285" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62195" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -16,13 +16,20 @@ export const StyledCodeWrapper = styled.div`
     text-align: left;
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
     font-size: 18px;
-    /* font-family: 'FiraCode', 'Inconsolata', monospace; */
-    font-family: 'Inconsolata', monospace;
+    line-height: 1.5;
+    font-family: 'FiraCode', monospace;
+    font-family: monospace;
     font-variant-ligatures: contextual;
   }
 
   .CodeMirror-scroll {
     overflow: hidden !important;
+  }
+
+  .CodeMirror-selected {
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
   }
 
   .CodeMirror-lines {

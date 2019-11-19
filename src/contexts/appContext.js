@@ -42,7 +42,8 @@ export const AppProvider = props => {
   // Capture DOM screenshot
   const domToImage = () => {
     const wrapper = document.querySelector('.code-wrapper')
-    const scale = 1.5
+    const scale = 2
+
     return domtoimage.toBlob(wrapper, {
       style: {
         margin: '0',

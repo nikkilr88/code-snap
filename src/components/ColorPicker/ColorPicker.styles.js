@@ -84,6 +84,7 @@ export const StyledInputWrapper = styled.div`
 
   input {
     width: 100%;
+    min-width: 0;
     padding: 10px;
     border: 2px solid #ddd;
     border-radius: 0 10px 10px 0;

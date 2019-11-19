@@ -32558,7 +32558,7 @@ var AppProvider = function AppProvider(props) {
       mode = _useState6[0],
       setMode = _useState6[1];
 
-  var _useState7 = (0, _react.useState)('FiraCode'),
+  var _useState7 = (0, _react.useState)(''),
       _useState8 = _slicedToArray(_useState7, 2),
       font = _useState8[0],
       setFont = _useState8[1];
@@ -61926,7 +61926,7 @@ var _styledComponents = _interopRequireDefault(require("styled-components"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject3() {
-  var data = _taggedTemplateLiteral(["\n  margin: 10px 5px;\n  display: flex;\n  align-items: center;\n  height: 40px;\n\n  .icon-wrapper {\n    height: 100%;\n    padding: 10px;\n    background: #ddd;\n    border-radius: 10px 0 0 10px;\n    flex: 0 0 50px;\n  }\n\n  .hashtag {\n    background: #ddd;\n    height: 100%;\n    width: 100%;\n    color: #777;\n  }\n\n  input {\n    width: 100%;\n    padding: 10px;\n    border: 2px solid #ddd;\n    border-radius: 0 10px 10px 0;\n    color: #777;\n    font-weight: bold;\n    font-size: 16px;\n    height: 100%;\n    flex: 1 1 auto;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  margin: 10px 5px;\n  display: flex;\n  align-items: center;\n  height: 40px;\n\n  .icon-wrapper {\n    height: 100%;\n    padding: 10px;\n    background: #ddd;\n    border-radius: 10px 0 0 10px;\n    flex: 0 0 50px;\n  }\n\n  .hashtag {\n    background: #ddd;\n    height: 100%;\n    width: 100%;\n    color: #777;\n  }\n\n  input {\n    width: 100%;\n    min-width: 0;\n    padding: 10px;\n    border: 2px solid #ddd;\n    border-radius: 0 10px 10px 0;\n    color: #777;\n    font-weight: bold;\n    font-size: 16px;\n    height: 100%;\n    flex: 1 1 auto;\n  }\n"]);
 
   _templateObject3 = function _templateObject3() {
     return data;
@@ -65100,7 +65100,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63520" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65176" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

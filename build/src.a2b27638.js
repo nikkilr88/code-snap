@@ -32595,6 +32595,7 @@ var AppProvider = function AppProvider(props) {
   var domToImage = function domToImage() {
     var wrapper = document.querySelector('.code-wrapper');
     var scale = 1.5;
+    console.log(wrapper.clientWidth);
     return _domToImage.default.toBlob(wrapper, {
       style: {
         margin: '0',
@@ -52119,7 +52120,7 @@ var _styledComponents = _interopRequireDefault(require("styled-components"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  margin: 100px auto 50px auto;\n  padding: 50px;\n  width: auto;\n  max-width: 700px;\n  display: table;\n  background: ", ";\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 17px;\n    /* font-family: 'FiraCode', 'Inconsolata', monospace; */\n    font-family: 'Inconsolata', monospace;\n    font-variant-ligatures: contextual;\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 15px !important;\n  }\n\n  pre.CodeMirror-line {\n    padding: 4px !important;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  &.code-wrapper {\n    margin: 100px auto 50px auto;\n    padding: 50px;\n    width: auto;\n    max-width: 700px;\n    display: table;\n    background: ", ";\n  }\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 18px;\n    /* font-family: 'FiraCode', 'Inconsolata', monospace; */\n    font-family: 'Inconsolata', monospace;\n    /* font-variant-ligatures: contextual; */\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 15px !important;\n  }\n\n  pre.CodeMirror-line {\n    padding: 4px !important;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -52211,7 +52212,6 @@ var CodeWrapper = function CodeWrapper() {
     theme: theme,
     lineNumbers: false,
     lineWrapping: true,
-    defaultTextHeight: 20,
     autoCloseBrackets: true
   };
   return _react.default.createElement(_CodeWrapper.StyledCodeWrapper, {
@@ -65045,7 +65045,7 @@ var _styledComponents = require("styled-components");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n\n  @import url('https://fonts.googleapis.com/css?family=Inconsolata');\n\n  @font-face {\n    font-family: 'FiraCode';\n    src: url('", "') format('truetype');\n  }\n\n  body {\n    font-family: 'Inconsolata', sans-serif;\n    color: #2b2b2b;\n    background: #f7f7f7;\n    text-align: center;\n  }\n\n  img {\n    margin: 100px 0 0;\n    max-width: 500px;\n    width: 80%;\n  }\n\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  select {\n    margin-right: 10px;\n    padding: 10px;\n    height: 40px;\n    border: none;\n    border-radius: 50px;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-weight: bold;\n    color: #eee;\n    background: #444;\n    cursor: pointer;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n\n  @import url('https://fonts.googleapis.com/css?family=Inconsolata');\n\n  @font-face {\n    font-family: 'FiraCode';\n    src: url('", "') format('truetype');\n  }\n\n  body {\n    font-family: sans-serif;\n    color: #2b2b2b;\n    background: #f7f7f7;\n    text-align: center;\n  }\n\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  select {\n    margin-right: 10px;\n    padding: 10px;\n    height: 40px;\n    border: none;\n    border-radius: 50px;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-weight: bold;\n    color: #eee;\n    background: #444;\n    cursor: pointer;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -65087,7 +65087,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59247" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59712" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

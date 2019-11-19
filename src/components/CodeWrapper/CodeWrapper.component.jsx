@@ -43,7 +43,6 @@ const CodeWrapper = () => {
     theme,
     lineNumbers: false,
     lineWrapping: true,
-    defaultTextHeight: 20,
     autoCloseBrackets: true
   }
 

@@ -23,16 +23,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: 'Inconsolata', sans-serif;
+    font-family: sans-serif;
     color: #2b2b2b;
     background: #f7f7f7;
     text-align: center;
-  }
-
-  img {
-    margin: 100px 0 0;
-    max-width: 500px;
-    width: 80%;
   }
 
   * {

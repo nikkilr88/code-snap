@@ -32558,15 +32558,20 @@ var AppProvider = function AppProvider(props) {
       mode = _useState6[0],
       setMode = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(false),
+  var _useState7 = (0, _react.useState)('FiraCode'),
       _useState8 = _slicedToArray(_useState7, 2),
-      uploading = _useState8[0],
-      setUploading = _useState8[1];
+      font = _useState8[0],
+      setFont = _useState8[1];
 
-  var _useState9 = (0, _react.useState)('// Pssst... Paste your code here'),
+  var _useState9 = (0, _react.useState)(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      codeText = _useState10[0],
-      setCodeText = _useState10[1]; // Update codeMirror text
+      uploading = _useState10[0],
+      setUploading = _useState10[1];
+
+  var _useState11 = (0, _react.useState)('// Pssst... Paste your code here'),
+      _useState12 = _slicedToArray(_useState11, 2),
+      codeText = _useState12[0],
+      setCodeText = _useState12[1]; // Update codeMirror text
 
 
   var handleOnChange = function handleOnChange(val) {
@@ -32647,6 +32652,7 @@ var AppProvider = function AppProvider(props) {
 
   return _react.default.createElement(AppContext.Provider, {
     value: {
+      font: font,
       color: color,
       changeColor: changeColor,
       theme: theme,
@@ -52119,7 +52125,7 @@ var _styledComponents = _interopRequireDefault(require("styled-components"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  &.code-wrapper {\n    margin: 100px auto 50px auto;\n    padding: 50px;\n    width: auto;\n    max-width: 700px;\n    display: table;\n    background: ", ";\n  }\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 18px;\n    line-height: 1.5;\n    font-family: 'FiraCode', monospace;\n    font-family: monospace;\n    font-variant-ligatures: contextual;\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-selected {\n    width: 100% !important;\n    left: 0 !important;\n    right: 0 !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 10px !important;\n  }\n\n  /* pre.CodeMirror-line {\n    padding: 4px !important;\n  } */\n"]);
+  var data = _taggedTemplateLiteral(["\n  margin: 100px auto 50px auto;\n  padding: 50px;\n  width: auto;\n  max-width: 700px;\n  display: table;\n  background: ", ";\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 18px;\n    line-height: 1.5;\n    font-family: ", ", monospace;\n    font-variant-ligatures: contextual;\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-selected {\n    width: 100% !important;\n    left: 0 !important;\n    right: 0 !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 15px !important;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -52132,6 +52138,8 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 var StyledCodeWrapper = _styledComponents.default.div(_templateObject(), function (props) {
   return props.color;
+}, function (props) {
+  return props.font;
 });
 
 exports.StyledCodeWrapper = StyledCodeWrapper;
@@ -52200,6 +52208,7 @@ require('codemirror/theme/icecoder.css'); // Styles
 
 var CodeWrapper = function CodeWrapper() {
   var _useContext = (0, _react.useContext)(_appContext.AppContext),
+      font = _useContext.font,
       mode = _useContext.mode,
       theme = _useContext.theme,
       color = _useContext.color,
@@ -52215,6 +52224,7 @@ var CodeWrapper = function CodeWrapper() {
   };
   return _react.default.createElement(_CodeWrapper.StyledCodeWrapper, {
     color: color,
+    font: font,
     className: "code-wrapper"
   }, _react.default.createElement(_reactCodemirror.Controlled, {
     value: codeText,
@@ -65090,7 +65100,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62195" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63520" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

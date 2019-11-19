@@ -1,14 +1,12 @@
 import styled from 'styled-components'
 
 export const StyledCodeWrapper = styled.div`
-  &.code-wrapper {
-    margin: 100px auto 50px auto;
-    padding: 50px;
-    width: auto;
-    max-width: 700px;
-    display: table;
-    background: ${props => props.color};
-  }
+  margin: 100px auto 50px auto;
+  padding: 50px;
+  width: auto;
+  max-width: 700px;
+  display: table;
+  background: ${props => props.color};
 
   .CodeMirror {
     height: auto;
@@ -17,8 +15,7 @@ export const StyledCodeWrapper = styled.div`
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
     font-size: 18px;
     line-height: 1.5;
-    font-family: 'FiraCode', monospace;
-    font-family: monospace;
+    font-family: ${props => props.font}, monospace;
     font-variant-ligatures: contextual;
   }
 
@@ -33,10 +30,6 @@ export const StyledCodeWrapper = styled.div`
   }
 
   .CodeMirror-lines {
-    padding: 10px !important;
+    padding: 15px !important;
   }
-
-  /* pre.CodeMirror-line {
-    padding: 4px !important;
-  } */
 `

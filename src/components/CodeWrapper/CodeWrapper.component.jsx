@@ -36,7 +36,9 @@ require('codemirror/theme/icecoder.css')
 import { StyledCodeWrapper } from './CodeWrapper.styles'
 
 const CodeWrapper = () => {
-  const { mode, theme, color, codeText, setCodeText } = useContext(AppContext)
+  const { font, mode, theme, color, codeText, setCodeText } = useContext(
+    AppContext
+  )
 
   const options = {
     mode,
@@ -47,7 +49,7 @@ const CodeWrapper = () => {
   }
 
   return (
-    <StyledCodeWrapper color={color} className="code-wrapper">
+    <StyledCodeWrapper color={color} font={font} className="code-wrapper">
       <CodeMirror
         value={codeText}
         options={options}

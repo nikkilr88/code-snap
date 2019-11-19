@@ -13,6 +13,7 @@ export const AppProvider = props => {
   const [color, setColor] = useState('#34495e')
   const [theme, setTheme] = useState('monokai')
   const [mode, setMode] = useState('javascript')
+  const [font, setFont] = useState('FiraCode')
   const [uploading, setUploading] = useState(false)
   const [codeText, setCodeText] = useState('// Pssst... Paste your code here')
 
@@ -104,6 +105,7 @@ export const AppProvider = props => {
   return (
     <AppContext.Provider
       value={{
+        font,
         color,
         changeColor,
         theme,

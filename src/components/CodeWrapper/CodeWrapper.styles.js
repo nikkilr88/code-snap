@@ -18,7 +18,7 @@ export const StyledCodeWrapper = styled.div`
     font-size: 18px;
     /* font-family: 'FiraCode', 'Inconsolata', monospace; */
     font-family: 'Inconsolata', monospace;
-    /* font-variant-ligatures: contextual; */
+    font-variant-ligatures: contextual;
   }
 
   .CodeMirror-scroll {
@@ -26,10 +26,10 @@ export const StyledCodeWrapper = styled.div`
   }
 
   .CodeMirror-lines {
-    padding: 15px !important;
+    padding: 10px !important;
   }
 
-  pre.CodeMirror-line {
+  /* pre.CodeMirror-line {
     padding: 4px !important;
-  }
+  } */
 `

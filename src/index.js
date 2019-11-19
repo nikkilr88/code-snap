@@ -8,25 +8,25 @@ import App from './components/App'
 import { AppProvider } from './contexts/appContext'
 
 // Fonts
-import FiraCode from './FiraCode-Regular.ttf'
+import FiraCode from './fonts/FiraCode-Regular.ttf'
+import Inconsolata from './fonts/Inconsolata-Regular.ttf'
 
 // Styles
 import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
-
-  @import url('https://fonts.googleapis.com/css?family=Inconsolata');
-
   @font-face {
     font-family: 'FiraCode';
     src: url('${FiraCode}') format('truetype');
   }
 
+  @font-face {
+    font-family: 'Inconsolata';
+    src: url('${Inconsolata}') format('truetype');
+  }
+
   body {
-    font-family: sans-serif;
-    color: #2b2b2b;
     background: #f7f7f7;
-    text-align: center;
   }
 
   * {

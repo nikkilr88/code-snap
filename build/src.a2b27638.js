@@ -32595,7 +32595,6 @@ var AppProvider = function AppProvider(props) {
   var domToImage = function domToImage() {
     var wrapper = document.querySelector('.code-wrapper');
     var scale = 1.5;
-    console.log(wrapper.clientWidth);
     return _domToImage.default.toBlob(wrapper, {
       style: {
         margin: '0',
@@ -52120,7 +52119,7 @@ var _styledComponents = _interopRequireDefault(require("styled-components"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  &.code-wrapper {\n    margin: 100px auto 50px auto;\n    padding: 50px;\n    width: auto;\n    max-width: 700px;\n    display: table;\n    background: ", ";\n  }\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 18px;\n    /* font-family: 'FiraCode', 'Inconsolata', monospace; */\n    font-family: 'Inconsolata', monospace;\n    /* font-variant-ligatures: contextual; */\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 15px !important;\n  }\n\n  pre.CodeMirror-line {\n    padding: 4px !important;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  &.code-wrapper {\n    margin: 100px auto 50px auto;\n    padding: 50px;\n    width: auto;\n    max-width: 700px;\n    display: table;\n    background: ", ";\n  }\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 18px;\n    /* font-family: 'FiraCode', 'Inconsolata', monospace; */\n    font-family: 'Inconsolata', monospace;\n    font-variant-ligatures: contextual;\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 10px !important;\n  }\n\n  /* pre.CodeMirror-line {\n    padding: 4px !important;\n  } */\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -65025,8 +65024,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _default = _App.default;
 exports.default = _default;
-},{"./App.component":"src/components/App/App.component.jsx"}],"src/FiraCode-Regular.ttf":[function(require,module,exports) {
-module.exports = "/FiraCode-Regular.0f737178.ttf";
+},{"./App.component":"src/components/App/App.component.jsx"}],"src/fonts/FiraCode-Regular.ttf":[function(require,module,exports) {
+module.exports = "/FiraCode-Regular.0a0178d4.ttf";
+},{}],"src/fonts/Inconsolata-Regular.ttf":[function(require,module,exports) {
+module.exports = "/Inconsolata-Regular.abc802fb.ttf";
 },{}],"src/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -65038,14 +65039,16 @@ var _App = _interopRequireDefault(require("./components/App"));
 
 var _appContext = require("./contexts/appContext");
 
-var _FiraCodeRegular = _interopRequireDefault(require("./FiraCode-Regular.ttf"));
+var _FiraCodeRegular = _interopRequireDefault(require("./fonts/FiraCode-Regular.ttf"));
+
+var _InconsolataRegular = _interopRequireDefault(require("./fonts/Inconsolata-Regular.ttf"));
 
 var _styledComponents = require("styled-components");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n\n  @import url('https://fonts.googleapis.com/css?family=Inconsolata');\n\n  @font-face {\n    font-family: 'FiraCode';\n    src: url('", "') format('truetype');\n  }\n\n  body {\n    font-family: sans-serif;\n    color: #2b2b2b;\n    background: #f7f7f7;\n    text-align: center;\n  }\n\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  select {\n    margin-right: 10px;\n    padding: 10px;\n    height: 40px;\n    border: none;\n    border-radius: 50px;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-weight: bold;\n    color: #eee;\n    background: #444;\n    cursor: pointer;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  @font-face {\n    font-family: 'FiraCode';\n    src: url('", "') format('truetype');\n  }\n\n  @font-face {\n    font-family: 'Inconsolata';\n    src: url('", "') format('truetype');\n  }\n\n  body {\n    background: #f7f7f7;\n  }\n\n  * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  select {\n    margin-right: 10px;\n    padding: 10px;\n    height: 40px;\n    border: none;\n    border-radius: 50px;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-weight: bold;\n    color: #eee;\n    background: #444;\n    cursor: pointer;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -65056,10 +65059,10 @@ function _templateObject() {
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var GlobalStyle = (0, _styledComponents.createGlobalStyle)(_templateObject(), _FiraCodeRegular.default);
+var GlobalStyle = (0, _styledComponents.createGlobalStyle)(_templateObject(), _FiraCodeRegular.default, _InconsolataRegular.default);
 
 _reactDom.default.render(_react.default.createElement(_appContext.AppProvider, null, _react.default.createElement(GlobalStyle, null), _react.default.createElement(_App.default, null)), document.getElementById('root'));
-},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","./components/App":"src/components/App/index.js","./contexts/appContext":"src/contexts/appContext.js","./FiraCode-Regular.ttf":"src/FiraCode-Regular.ttf","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","./components/App":"src/components/App/index.js","./contexts/appContext":"src/contexts/appContext.js","./fonts/FiraCode-Regular.ttf":"src/fonts/FiraCode-Regular.ttf","./fonts/Inconsolata-Regular.ttf":"src/fonts/Inconsolata-Regular.ttf","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -65087,7 +65090,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59712" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61285" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

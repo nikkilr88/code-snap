@@ -9,37 +9,54 @@ const ThemePicker = () => {
 
   // Theme options
   const themes = [
-    { theme: 'monokai', name: 'Monokai' },
-    { theme: 'blackboard', name: 'Blackboard' },
-    { theme: 'duotone-dark', name: 'Duotone Dark' },
-    { theme: 'duotone-light', name: 'Duotone Light' },
-    { theme: 'xq-dark', name: 'XQ Dark' },
-    { theme: 'material', name: 'Material' },
-    { theme: 'mdn-like', name: 'MDN Like' },
-    { theme: 'darcula', name: 'Darcula' },
-    { theme: 'dracula', name: 'Dracula' },
-    { theme: 'icecoder', name: 'Ice Coder' }
+    { theme: 'monokai', name: 'Monokai', type: 'dark' },
+    { theme: 'blackboard', name: 'Blackboard', type: 'dark' },
+    { theme: 'duotone-dark', name: 'Duotone Dark', type: 'dark' },
+    { theme: 'duotone-light', name: 'Duotone Light', type: 'light' },
+    { theme: 'xq-dark', name: 'XQ Dark', type: 'dark' },
+    { theme: 'material', name: 'Material', type: 'dark' },
+    { theme: 'mdn-like', name: 'MDN Like', type: 'light' },
+    { theme: 'darcula', name: 'Darcula', type: 'dark' },
+    { theme: 'dracula', name: 'Dracula', type: 'dark' },
+    { theme: 'icecoder', name: 'Ice Coder', type: 'dark' }
   ]
 
   // Theme options JSX
-  const options = themes
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map((theme, i) => (
-      <option value={theme.theme} key={i}>
-        {theme.name}
-      </option>
-    ))
+  const renderOptionGroups = () => {
+    const lightThemes = [],
+      darkThemes = []
 
-  return (
-    <select
-      id="theme-picker"
-      name="theme"
-      onChange={changeTheme}
-      defaultValue="monokai"
-    >
-      {options}
-    </select>
-  )
+    themes
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((theme, i) => {
+        const option = (
+          <option value={theme.theme} key={i}>
+            {theme.name}
+          </option>
+        )
+
+        if (theme.type === 'dark') {
+          darkThemes.push(option)
+        } else {
+          lightThemes.push(option)
+        }
+      })
+
+    return (
+      <select
+        name="theme"
+        id="theme-picker"
+        defaultValue="monokai"
+        onChange={changeTheme}
+        aria-label="Code editor theme"
+      >
+        <optgroup label="Dark Themes">{darkThemes}</optgroup>
+        <optgroup label="Light Themes">{lightThemes}</optgroup>
+      </select>
+    )
+  }
+
+  return renderOptionGroups()
 }
 
 export default ThemePicker

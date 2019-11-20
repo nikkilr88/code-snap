@@ -9,6 +9,7 @@ import { faHashtag } from '@fortawesome/free-solid-svg-icons'
 
 // Styles
 import {
+  StyledColorOption,
   StyledInputWrapper,
   StyledColorPickerModal,
   StyledColorPickerWrapper
@@ -23,6 +24,7 @@ const ColorPicker = () => {
 
   // Refs
   const colorPicker = useRef()
+  const colorPickerSelected = useRef()
 
   // Toggle picker options visibility
   const togglePicker = e => {
@@ -33,6 +35,26 @@ const ColorPicker = () => {
     setShowPicker(prevState =>
       clickInside ? true : btnClick ? false : !prevState
     )
+  }
+
+  // Close Toggle picker when ESC is pressed or when focus is lost
+  const closePicker = event => {
+    switch (event.key) {
+      case 'Escape':
+        colorPickerSelected.current.focus()
+        setShowPicker(false)
+        break
+      case 'Tab':
+        if (
+          colorPicker.current &&
+          !colorPicker.current.contains(event.target)
+        ) {
+          setShowPicker(false)
+        }
+        break
+      default:
+        break
+    }
   }
 
   // Color options
@@ -52,32 +74,38 @@ const ColorPicker = () => {
   ]
 
   // Color options JSX
-  const colorOptions = colors.map((color, i) => (
-    <span
-      key={color}
-      data-color={color}
-      onClick={changeColor}
+  const colorOptions = colors.map((colorOption, i) => (
+    <StyledColorOption
       className="color option"
-      style={{
-        background: color,
-        border: color === '#ffffff' ? '2px solid #ccc' : '2px solid #fff'
-      }}
+      key={colorOption}
+      onClick={changeColor}
+      aria-label={colorOption}
+      data-color={colorOption}
+      colorOption={colorOption}
+      selected={color === colorOption}
     />
   ))
 
-  // Add event listener on mount
+  // This runs once on mount
   useEffect(() => {
-    document.addEventListener('click', togglePicker, false)
+    // Add event listener to toggle picker
+    document.addEventListener('click', togglePicker)
+    document.addEventListener('keyup', closePicker)
 
     // Remove event listener before unmount
     return () => {
-      document.removeEventListener('click', togglePicker, false)
+      document.removeEventListener('click', togglePicker)
+      document.removeEventListener('keyup', closePicker)
     }
   }, [])
 
   return (
     <StyledColorPickerWrapper color={color}>
-      <button className="color selected" />
+      <button
+        aria-label={`Accent color ${color}`}
+        className="color selected"
+        ref={colorPickerSelected}
+      />
 
       {showPicker && (
         <StyledColorPickerModal ref={colorPicker}>

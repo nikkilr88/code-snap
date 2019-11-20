@@ -22,7 +22,7 @@ export const StyledNav = styled.nav`
     font-weight: bold;
   }
 
-  button {
+  .nav-button {
     margin: 0 5px;
     padding: 10px 20px;
     height: 40px;

@@ -33,11 +33,12 @@ const Nav = () => {
       </div>
 
       <div className="nav-group">
-        <button className="save-snap" onClick={saveSnap}>
-          <FontAwesomeIcon className="font-awesome" icon={faDownload} />
+        <button className="save-snap nav-button" onClick={saveSnap}>
+          <FontAwesomeIcon className="font-awesome" icon={faDownload} />{' '}
+          Download PNG
         </button>
 
-        <button className="share-twitter" onClick={shareSnap}>
+        <button className="share-twitter nav-button" onClick={shareSnap}>
           {!uploading ? (
             <Fragment>
               <FontAwesomeIcon className="font-awesome" icon={faTwitter} />

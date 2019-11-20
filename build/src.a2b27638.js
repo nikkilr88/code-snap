@@ -52276,50 +52276,77 @@ var ThemePicker = function ThemePicker() {
 
   var themes = [{
     theme: 'monokai',
-    name: 'Monokai'
+    name: 'Monokai',
+    type: 'dark'
   }, {
     theme: 'blackboard',
-    name: 'Blackboard'
+    name: 'Blackboard',
+    type: 'dark'
   }, {
     theme: 'duotone-dark',
-    name: 'Duotone Dark'
+    name: 'Duotone Dark',
+    type: 'dark'
   }, {
     theme: 'duotone-light',
-    name: 'Duotone Light'
+    name: 'Duotone Light',
+    type: 'light'
   }, {
     theme: 'xq-dark',
-    name: 'XQ Dark'
+    name: 'XQ Dark',
+    type: 'dark'
   }, {
     theme: 'material',
-    name: 'Material'
+    name: 'Material',
+    type: 'dark'
   }, {
     theme: 'mdn-like',
-    name: 'MDN Like'
+    name: 'MDN Like',
+    type: 'light'
   }, {
     theme: 'darcula',
-    name: 'Darcula'
+    name: 'Darcula',
+    type: 'dark'
   }, {
     theme: 'dracula',
-    name: 'Dracula'
+    name: 'Dracula',
+    type: 'dark'
   }, {
     theme: 'icecoder',
-    name: 'Ice Coder'
+    name: 'Ice Coder',
+    type: 'dark'
   }]; // Theme options JSX
 
-  var options = themes.sort(function (a, b) {
-    return a.name.localeCompare(b.name);
-  }).map(function (theme, i) {
-    return _react.default.createElement("option", {
-      value: theme.theme,
-      key: i
-    }, theme.name);
-  });
-  return _react.default.createElement("select", {
-    id: "theme-picker",
-    name: "theme",
-    onChange: changeTheme,
-    defaultValue: "monokai"
-  }, options);
+  var renderOptionGroups = function renderOptionGroups() {
+    var lightThemes = [],
+        darkThemes = [];
+    themes.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    }).forEach(function (theme, i) {
+      var option = _react.default.createElement("option", {
+        value: theme.theme,
+        key: i
+      }, theme.name);
+
+      if (theme.type === 'dark') {
+        darkThemes.push(option);
+      } else {
+        lightThemes.push(option);
+      }
+    });
+    return _react.default.createElement("select", {
+      name: "theme",
+      id: "theme-picker",
+      defaultValue: "monokai",
+      onChange: changeTheme,
+      "aria-label": "Code editor theme"
+    }, _react.default.createElement("optgroup", {
+      label: "Dark Themes"
+    }, darkThemes), _react.default.createElement("optgroup", {
+      label: "Light Themes"
+    }, lightThemes));
+  };
+
+  return renderOptionGroups();
 };
 
 var _default = ThemePicker;
@@ -61919,14 +61946,24 @@ exports.fas = _iconsCache;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.StyledInputWrapper = exports.StyledColorPickerModal = exports.StyledColorPickerWrapper = void 0;
+exports.StyledInputWrapper = exports.StyledColorOption = exports.StyledColorPickerModal = exports.StyledColorPickerWrapper = void 0;
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _templateObject3() {
+function _templateObject4() {
   var data = _taggedTemplateLiteral(["\n  margin: 10px 5px;\n  display: flex;\n  align-items: center;\n  height: 40px;\n\n  .icon-wrapper {\n    height: 100%;\n    padding: 10px;\n    background: #ddd;\n    border-radius: 10px 0 0 10px;\n    flex: 0 0 50px;\n  }\n\n  .hashtag {\n    background: #ddd;\n    height: 100%;\n    width: 100%;\n    color: #777;\n  }\n\n  input {\n    width: 100%;\n    min-width: 0;\n    padding: 10px;\n    border: 2px solid #ddd;\n    border-radius: 0 10px 10px 0;\n    color: #777;\n    font-weight: bold;\n    font-size: 16px;\n    height: 100%;\n    flex: 1 1 auto;\n  }\n"]);
+
+  _templateObject4 = function _templateObject4() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject3() {
+  var data = _taggedTemplateLiteral(["\n  background: ", ";\n  border: ", ";\n"]);
 
   _templateObject3 = function _templateObject3() {
     return data;
@@ -61965,12 +62002,23 @@ var StyledColorPickerWrapper = _styledComponents.default.div(_templateObject(), 
 
 exports.StyledColorPickerWrapper = StyledColorPickerWrapper;
 
-var StyledColorPickerModal = _styledComponents.default.div(_templateObject2()); // ! INPUT WRAPPER
+var StyledColorPickerModal = _styledComponents.default.div(_templateObject2()); // ! COLOR OPTION BUTTON
 
 
 exports.StyledColorPickerModal = StyledColorPickerModal;
 
-var StyledInputWrapper = _styledComponents.default.div(_templateObject3());
+var StyledColorOption = _styledComponents.default.span(_templateObject3(), function (props) {
+  return props.colorOption;
+}, function (_ref) {
+  var colorOption = _ref.colorOption,
+      selected = _ref.selected;
+  return colorOption === '#ffffff' ? "2px solid #ccc" : selected ? "2px dashed #ccc" : "2px solid ".concat(colorOption);
+}); // ! INPUT WRAPPER
+
+
+exports.StyledColorOption = StyledColorOption;
+
+var StyledInputWrapper = _styledComponents.default.div(_templateObject4());
 
 exports.StyledInputWrapper = StyledInputWrapper;
 },{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"src/components/ColorPicker/ColorPicker.component.jsx":[function(require,module,exports) {
@@ -62016,7 +62064,8 @@ var ColorPicker = function ColorPicker() {
       changeColor = _useContext.changeColor; // Refs
 
 
-  var colorPicker = (0, _react.useRef)(); // Toggle picker options visibility
+  var colorPicker = (0, _react.useRef)();
+  var colorPickerSelected = (0, _react.useRef)(); // Toggle picker options visibility
 
   var togglePicker = function togglePicker(e) {
     var btnClick = !e.target.classList.contains('selected');
@@ -62024,35 +62073,59 @@ var ColorPicker = function ColorPicker() {
     setShowPicker(function (prevState) {
       return clickInside ? true : btnClick ? false : !prevState;
     });
+  }; // Close Toggle picker when ESC is pressed or when focus is lost
+
+
+  var closePicker = function closePicker(event) {
+    switch (event.key) {
+      case 'Escape':
+        colorPickerSelected.current.focus();
+        setShowPicker(false);
+        break;
+
+      case 'Tab':
+        if (colorPicker.current && !colorPicker.current.contains(event.target)) {
+          setShowPicker(false);
+        }
+
+        break;
+
+      default:
+        break;
+    }
   }; // Color options
 
 
   var colors = ['#3498db', '#2980b9', '#2ecc71', '#16a085', '#e74c3c', '#c0392b', '#34495e', '#2c3e50', '#8e44ad', '#333333', '#000000', '#ffffff']; // Color options JSX
 
-  var colorOptions = colors.map(function (color, i) {
-    return _react.default.createElement("span", {
-      key: color,
-      "data-color": color,
-      onClick: changeColor,
+  var colorOptions = colors.map(function (colorOption, i) {
+    return _react.default.createElement(_ColorPicker.StyledColorOption, {
       className: "color option",
-      style: {
-        background: color,
-        border: color === '#ffffff' ? '2px solid #ccc' : '2px solid #fff'
-      }
+      key: colorOption,
+      onClick: changeColor,
+      "aria-label": colorOption,
+      "data-color": colorOption,
+      colorOption: colorOption,
+      selected: color === colorOption
     });
-  }); // Add event listener on mount
+  }); // This runs once on mount
 
   (0, _react.useEffect)(function () {
-    document.addEventListener('click', togglePicker, false); // Remove event listener before unmount
+    // Add event listener to toggle picker
+    document.addEventListener('click', togglePicker);
+    document.addEventListener('keyup', closePicker); // Remove event listener before unmount
 
     return function () {
-      document.removeEventListener('click', togglePicker, false);
+      document.removeEventListener('click', togglePicker);
+      document.removeEventListener('keyup', closePicker);
     };
   }, []);
   return _react.default.createElement(_ColorPicker.StyledColorPickerWrapper, {
     color: color
   }, _react.default.createElement("button", {
-    className: "color selected"
+    "aria-label": "Accent color ".concat(color),
+    className: "color selected",
+    ref: colorPickerSelected
   }), showPicker && _react.default.createElement(_ColorPicker.StyledColorPickerModal, {
     ref: colorPicker
   }, _react.default.createElement("div", {
@@ -62142,7 +62215,8 @@ var ModeSelect = function ModeSelect() {
   return _react.default.createElement("select", {
     name: "mode",
     onChange: changeMode,
-    defaultValue: "javascript"
+    defaultValue: "javascript",
+    "aria-label": "Programming language mode"
   }, options);
 };
 
@@ -64896,7 +64970,7 @@ var _styledComponents = _interopRequireDefault(require("styled-components"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  position: sticky;\n  top: 0;\n  padding: 25px 100px;\n  background: #2b2b2b;\n  border-bottom: 2px solid #eee;\n  display: flex;\n  justify-content: flex-end;\n  align-items: center;\n  z-index: 999;\n\n  .logo {\n    margin-right: auto;\n    color: #eee;\n    font-size: 18px;\n  }\n\n  .accent {\n    color: #e74c3c;\n    font-weight: bold;\n  }\n\n  button {\n    margin: 0 5px;\n    padding: 10px 20px;\n    height: 40px;\n    border: none;\n    font-weight: bold;\n    border-radius: 100px;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    cursor: pointer;\n  }\n\n  .save-snap {\n    background: linear-gradient(to bottom right, #e67e22, #e74c3c);\n    color: #fff;\n  }\n\n  .share-twitter {\n    background: linear-gradient(to bottom right, #00acee, #2980b9);\n    color: #fff;\n  }\n\n  .nav-group {\n    display: flex;\n    align-items: center;\n    margin-right: 25px;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  position: sticky;\n  top: 0;\n  padding: 25px 100px;\n  background: #2b2b2b;\n  border-bottom: 2px solid #eee;\n  display: flex;\n  justify-content: flex-end;\n  align-items: center;\n  z-index: 999;\n\n  .logo {\n    margin-right: auto;\n    color: #eee;\n    font-size: 18px;\n  }\n\n  .accent {\n    color: #e74c3c;\n    font-weight: bold;\n  }\n\n  .nav-button {\n    margin: 0 5px;\n    padding: 10px 20px;\n    height: 40px;\n    border: none;\n    font-weight: bold;\n    border-radius: 100px;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    cursor: pointer;\n  }\n\n  .save-snap {\n    background: linear-gradient(to bottom right, #e67e22, #e74c3c);\n    color: #fff;\n  }\n\n  .share-twitter {\n    background: linear-gradient(to bottom right, #00acee, #2980b9);\n    color: #fff;\n  }\n\n  .nav-group {\n    display: flex;\n    align-items: center;\n    margin-right: 25px;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -64963,13 +65037,13 @@ var Nav = function Nav() {
   }, _react.default.createElement(_ModeSelect.default, null), _react.default.createElement(_ThemePicker.default, null), _react.default.createElement(_ColorPicker.default, null)), _react.default.createElement("div", {
     className: "nav-group"
   }, _react.default.createElement("button", {
-    className: "save-snap",
+    className: "save-snap nav-button",
     onClick: saveSnap
   }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
     className: "font-awesome",
     icon: _freeSolidSvgIcons.faDownload
-  })), _react.default.createElement("button", {
-    className: "share-twitter",
+  }), ' ', "Download PNG"), _react.default.createElement("button", {
+    className: "share-twitter nav-button",
     onClick: shareSnap
   }, !uploading ? _react.default.createElement(_react.Fragment, null, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
     className: "font-awesome",
@@ -65100,7 +65174,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65176" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56938" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

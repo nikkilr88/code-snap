@@ -60,6 +60,17 @@ export const StyledColorPickerModal = styled.div`
   }
 `
 
+// ! COLOR OPTION BUTTON
+export const StyledColorOption = styled.span`
+  background: ${props => props.colorOption};
+  border: ${({ colorOption, selected }) =>
+    colorOption === '#ffffff'
+      ? `2px solid #ccc`
+      : selected
+      ? `2px dashed #ccc`
+      : `2px solid ${colorOption}`};
+`
+
 // ! INPUT WRAPPER
 export const StyledInputWrapper = styled.div`
   margin: 10px 5px;

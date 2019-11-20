@@ -27,7 +27,12 @@ const ModeSelect = () => {
     ))
 
   return (
-    <select name="mode" onChange={changeMode} defaultValue="javascript">
+    <select
+      name="mode"
+      onChange={changeMode}
+      defaultValue="javascript"
+      aria-label="Programming language mode"
+    >
       {options}
     </select>
   )

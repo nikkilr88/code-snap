@@ -32598,6 +32598,7 @@ var AppProvider = function AppProvider(props) {
 
 
   var domToImage = function domToImage() {
+    // FIXME: Is there a better way to implement this?
     var wrapper = document.querySelector('.code-wrapper');
     var scale = 2;
     return _domToImage.default.toBlob(wrapper, {
@@ -32609,8 +32610,8 @@ var AppProvider = function AppProvider(props) {
       width: wrapper.clientWidth * scale,
       height: wrapper.clientHeight * scale
     });
-  }; // Save DOM image to computer
-  // TODO: Add download format options
+  }; // TODO: Add SVG download option
+  // Save DOM image to computer
 
 
   var saveSnap = function saveSnap() {
@@ -52351,13 +52352,16 @@ var ThemePicker = function ThemePicker() {
   var renderOptionGroups = function renderOptionGroups() {
     var lightThemes = [],
         darkThemes = [];
-    themes.sort(function (a, b) {
+    themes // Sort themes alphabetically
+    .sort(function (a, b) {
       return a.name.localeCompare(b.name);
-    }).forEach(function (theme, i) {
+    }) // Create option for each theme
+    .forEach(function (theme, i) {
       var option = _react.default.createElement("option", {
         value: theme.theme,
         key: i
-      }, theme.name);
+      }, theme.name); // Push theme into correct theme array
+
 
       if (theme.type === 'dark') {
         darkThemes.push(option);
@@ -52460,9 +52464,7 @@ var NavModal = _react.default.forwardRef(function (props, ref) {
   // Close modal when user clicks out
   var handleOutsideClick = function handleOutsideClick(event) {
     var clickInside = ref.current && ref.current.contains(event.target);
-    props.setShowModal(function (prevState) {
-      return clickInside ? true : !prevState;
-    });
+    if (!clickInside) props.setShowModal(false);
   }; // Close modal when ESC is pressed or if user tabs out
 
 
@@ -62088,12 +62090,24 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.StyledInputWrapper = exports.StyledColorOption = exports.StyledSelectedColor = exports.StyledColorWrapper = void 0;
 
-var _styledComponents = _interopRequireDefault(require("styled-components"));
+var _styledComponents = _interopRequireWildcard(require("styled-components"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _templateObject5() {
+  var data = _taggedTemplateLiteral(["\n  margin: 10px 5px;\n  display: flex;\n  align-items: center;\n  height: 40px;\n\n  .icon-wrapper {\n    height: 100%;\n    padding: 10px;\n    background: #ddd;\n    border-radius: 10px 0 0 10px;\n    flex: 0 0 50px;\n  }\n\n  .hashtag {\n    background: #ddd;\n    height: 100%;\n    width: 100%;\n    color: #777;\n  }\n\n  input {\n    width: 100%;\n    min-width: 0;\n    padding: 10px;\n    border: 2px solid #ddd;\n    border-radius: 0 10px 10px 0;\n    color: #777;\n    font-weight: bold;\n    font-size: 16px;\n    height: 100%;\n    flex: 1 1 auto;\n  }\n"]);
+
+  _templateObject5 = function _templateObject5() {
+    return data;
+  };
+
+  return data;
+}
 
 function _templateObject4() {
-  var data = _taggedTemplateLiteral(["\n  margin: 10px 5px;\n  display: flex;\n  align-items: center;\n  height: 40px;\n\n  .icon-wrapper {\n    height: 100%;\n    padding: 10px;\n    background: #ddd;\n    border-radius: 10px 0 0 10px;\n    flex: 0 0 50px;\n  }\n\n  .hashtag {\n    background: #ddd;\n    height: 100%;\n    width: 100%;\n    color: #777;\n  }\n\n  input {\n    width: 100%;\n    min-width: 0;\n    padding: 10px;\n    border: 2px solid #ddd;\n    border-radius: 0 10px 10px 0;\n    color: #777;\n    font-weight: bold;\n    font-size: 16px;\n    height: 100%;\n    flex: 1 1 auto;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  ", "\n\n  background: ", ";\n  border: ", ";\n\n  &.selected {\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n  }\n"]);
 
   _templateObject4 = function _templateObject4() {
     return data;
@@ -62103,7 +62117,7 @@ function _templateObject4() {
 }
 
 function _templateObject3() {
-  var data = _taggedTemplateLiteral(["\n  background: ", ";\n  border: ", ";\n"]);
+  var data = _taggedTemplateLiteral(["\n  ", "\n\n  padding: 0;\n  margin: 0;\n  border: 2px solid #444;\n  background: ", ";\n  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n"]);
 
   _templateObject3 = function _templateObject3() {
     return data;
@@ -62113,7 +62127,7 @@ function _templateObject3() {
 }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["\n  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n\n  &.color {\n    margin: 3px;\n    display: inline-block;\n    height: 40px;\n    width: 40px;\n    border-radius: 50%;\n    cursor: pointer;\n  }\n\n  &.color.selected {\n    padding: 0;\n    margin: 0;\n    border: 2px solid #444;\n    background: ", ";\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  .colors {\n    display: flex;\n    flex-wrap: wrap;\n    justify-content: space-between;\n  }\n"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -62123,7 +62137,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  .colors {\n    display: flex;\n    flex-wrap: wrap;\n    justify-content: space-between;\n  }\n\n  .color {\n    margin: 3px;\n    display: inline-block;\n    height: 40px;\n    width: 40px;\n    border-radius: 50%;\n    cursor: pointer;\n  }\n\n  .selected {\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  margin: 3px;\n  display: inline-block;\n  height: 40px;\n  width: 40px;\n  border-radius: 50%;\n  cursor: pointer;\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -62134,20 +62148,21 @@ function _templateObject() {
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-// ! WRAPPER
-var StyledColorWrapper = _styledComponents.default.div(_templateObject()); // TODO: Fix repetitive styles
+// ! SHARED STYLES
+var colorStyles = (0, _styledComponents.css)(_templateObject()); // ! WRAPPER
 
+var StyledColorWrapper = _styledComponents.default.div(_templateObject2());
 
 exports.StyledColorWrapper = StyledColorWrapper;
 
-var StyledSelectedColor = _styledComponents.default.button(_templateObject2(), function (props) {
+var StyledSelectedColor = _styledComponents.default.button(_templateObject3(), colorStyles, function (props) {
   return props.color;
 }); // ! COLOR OPTION BUTTON
 
 
 exports.StyledSelectedColor = StyledSelectedColor;
 
-var StyledColorOption = _styledComponents.default.span(_templateObject3(), function (props) {
+var StyledColorOption = _styledComponents.default.span(_templateObject4(), colorStyles, function (props) {
   return props.colorOption;
 }, function (_ref) {
   var colorOption = _ref.colorOption,
@@ -62158,7 +62173,7 @@ var StyledColorOption = _styledComponents.default.span(_templateObject3(), funct
 
 exports.StyledColorOption = StyledColorOption;
 
-var StyledInputWrapper = _styledComponents.default.div(_templateObject4());
+var StyledInputWrapper = _styledComponents.default.div(_templateObject5());
 
 exports.StyledInputWrapper = StyledInputWrapper;
 },{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"src/components/ColorPicker/ColorPicker.component.jsx":[function(require,module,exports) {
@@ -62229,7 +62244,6 @@ var ColorPicker = function ColorPicker() {
   return _react.default.createElement(_Modal2.StyledModalWrapper, null, _react.default.createElement(_ColorPicker.StyledSelectedColor, {
     color: color,
     ref: colorPickerSelected,
-    className: "color selected",
     "aria-label": "Accent color ".concat(color),
     onClick: function onClick() {
       return setShowPicker(function (prevState) {
@@ -65196,12 +65210,13 @@ var Nav = function Nav() {
   }, "Download PNG"), _react.default.createElement("button", {
     disabled: true
   }, "Download SVG")))), _react.default.createElement("button", {
-    className: "share-twitter nav-button",
-    onClick: shareSnap
-  }, !uploading ? _react.default.createElement(_react.Fragment, null, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
+    onClick: shareSnap,
+    "aria-label": "Share to Twitter",
+    className: "share-twitter nav-button"
+  }, uploading ? _react.default.createElement(_Loader.default, null) : _react.default.createElement(_react.Fragment, null, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
     className: "font-awesome",
     icon: _fontawesomeFreeBrands.faTwitter
-  }), "Share") : _react.default.createElement(_Loader.default, null))));
+  }), "Share"))));
 };
 
 var _default = Nav;
@@ -65327,7 +65342,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51911" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57975" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -6,7 +6,7 @@ const NavModal = React.forwardRef((props, ref) => {
   // Close modal when user clicks out
   const handleOutsideClick = event => {
     const clickInside = ref.current && ref.current.contains(event.target)
-    props.setShowModal(prevState => (clickInside ? true : !prevState))
+    if (!clickInside) props.setShowModal(false)
   }
 
   // Close modal when ESC is pressed or if user tabs out

@@ -42,6 +42,7 @@ export const AppProvider = props => {
 
   // Capture DOM screenshot
   const domToImage = () => {
+    // FIXME: Is there a better way to implement this?
     const wrapper = document.querySelector('.code-wrapper')
     const scale = 2
 
@@ -56,8 +57,8 @@ export const AppProvider = props => {
     })
   }
 
+  // TODO: Add SVG download option
   // Save DOM image to computer
-  // TODO: Add download format options
   const saveSnap = () => {
     const date = new Date()
     const day = date.getDate()

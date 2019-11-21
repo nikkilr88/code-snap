@@ -31,9 +31,13 @@ const Nav = () => {
 
   return (
     <StyledNav>
+      {/* LOGO */}
+
       <p className="logo">
         code<span className="accent">Snap</span>
       </p>
+
+      {/* THEME & COLOR OPTIONS */}
 
       <div className="nav-group">
         <ModeSelect />
@@ -41,8 +45,12 @@ const Nav = () => {
         <ColorPicker />
       </div>
 
+      {/* BUTTONS */}
+
       <div className="nav-group">
         <StyledModalWrapper>
+          {/* DOWNLOAD BUTTON */}
+
           <button
             className="save-snap nav-button"
             onClick={() => setShowDownloadOptions(prevState => !prevState)}
@@ -50,6 +58,9 @@ const Nav = () => {
             <FontAwesomeIcon className="font-awesome" icon={faDownload} />{' '}
             Download
           </button>
+
+          {/* DOWNLOAD OPTIONS MODAL MENU */}
+
           {showDownloadOptions && (
             <NavModal
               ref={downloadOptions}
@@ -63,14 +74,20 @@ const Nav = () => {
           )}
         </StyledModalWrapper>
 
-        <button className="share-twitter nav-button" onClick={shareSnap}>
-          {!uploading ? (
+        {/* TWITTER SHARE BUTTON */}
+
+        <button
+          onClick={shareSnap}
+          aria-label="Share to Twitter"
+          className="share-twitter nav-button"
+        >
+          {uploading ? (
+            <Loader />
+          ) : (
             <Fragment>
               <FontAwesomeIcon className="font-awesome" icon={faTwitter} />
               Share
             </Fragment>
-          ) : (
-            <Loader />
           )}
         </button>
       </div>

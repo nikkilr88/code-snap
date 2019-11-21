@@ -27,7 +27,9 @@ const ThemePicker = () => {
       darkThemes = []
 
     themes
+      // Sort themes alphabetically
       .sort((a, b) => a.name.localeCompare(b.name))
+      // Create option for each theme
       .forEach((theme, i) => {
         const option = (
           <option value={theme.theme} key={i}>
@@ -35,6 +37,7 @@ const ThemePicker = () => {
           </option>
         )
 
+        // Push theme into correct theme array
         if (theme.type === 'dark') {
           darkThemes.push(option)
         } else {

@@ -61,13 +61,16 @@ const ColorPicker = () => {
 
   return (
     <StyledModalWrapper>
+      {/* SELECTED COLOR / OPEN MENU */}
+
       <StyledSelectedColor
         color={color}
         ref={colorPickerSelected}
-        className="color selected"
         aria-label={`Accent color ${color}`}
         onClick={() => setShowPicker(prevState => !prevState)}
       />
+
+      {/* COLOR MODAL MENU */}
 
       {showPicker && (
         <NavModal ref={colorPicker} setShowModal={setShowPicker}>

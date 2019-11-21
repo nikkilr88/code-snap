@@ -69,6 +69,8 @@ const CodeWrapper = () => {
   return (
     <Fragment>
       <StyledCodeWrapper color={color} font={font} className="code-wrapper">
+        {/* CODE MIRROR EDITOR */}
+
         <CodeMirror
           value={codeText}
           options={options}
@@ -77,6 +79,9 @@ const CodeWrapper = () => {
           }}
         />
       </StyledCodeWrapper>
+
+      {/* ESCAPE TIP MESSAGE */}
+
       <StyledHelpMessage>
         Press <span>ESC</span> to unfocus code editor.
       </StyledHelpMessage>

@@ -68,6 +68,7 @@ const Nav = () => {
             >
               <StyledDownloadOptions>
                 <button onClick={saveSnap}>Download PNG</button>
+                <hr />
                 <button disabled>Download SVG</button>
               </StyledDownloadOptions>
             </NavModal>

@@ -53,20 +53,21 @@ export const StyledNav = styled.nav`
 export const StyledDownloadOptions = styled.div`
   width: 100%;
 
+  hr {
+    margin: 5px 0;
+    border: none;
+    border-top: 1px solid #ccc;
+  }
+
   button {
     display: block;
     width: 100%;
     padding: 20px;
     border: none;
     background: none;
-    border-bottom: 1px solid #ccc;
     font-weight: bold;
     color: #333;
     cursor: pointer;
-
-    &:last-of-type {
-      border: none;
-    }
 
     &:hover {
       background: #e74c3c;

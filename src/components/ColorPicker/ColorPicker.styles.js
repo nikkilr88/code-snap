@@ -1,4 +1,14 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+
+// ! SHARED STYLES
+const colorStyles = css`
+  margin: 3px;
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+`
 
 // ! WRAPPER
 export const StyledColorWrapper = styled.div`
@@ -7,44 +17,22 @@ export const StyledColorWrapper = styled.div`
     flex-wrap: wrap;
     justify-content: space-between;
   }
-
-  .color {
-    margin: 3px;
-    display: inline-block;
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  .selected {
-    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
-  }
 `
 
-// TODO: Fix repetitive styles
 export const StyledSelectedColor = styled.button`
+  ${colorStyles}
+
+  padding: 0;
+  margin: 0;
+  border: 2px solid #444;
+  background: ${props => props.color};
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
-
-  &.color {
-    margin: 3px;
-    display: inline-block;
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  &.color.selected {
-    padding: 0;
-    margin: 0;
-    border: 2px solid #444;
-    background: ${props => props.color};
-  }
 `
 
 // ! COLOR OPTION BUTTON
 export const StyledColorOption = styled.span`
+  ${colorStyles}
+
   background: ${props => props.colorOption};
   border: ${({ colorOption, selected }) =>
     colorOption === '#ffffff'
@@ -52,6 +40,10 @@ export const StyledColorOption = styled.span`
       : selected
       ? `2px dashed #ccc`
       : `2px solid ${colorOption}`};
+
+  &.selected {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
+  }
 `
 
 // ! INPUT WRAPPER

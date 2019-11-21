@@ -62107,7 +62107,7 @@ function _templateObject5() {
 }
 
 function _templateObject4() {
-  var data = _taggedTemplateLiteral(["\n  ", "\n\n  background: ", ";\n  border: ", ";\n\n  &.selected {\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  ", "\n\n  background: ", ";\n  border: ", ";\n\n  box-shadow: ", "\n"]);
 
   _templateObject4 = function _templateObject4() {
     return data;
@@ -62167,7 +62167,9 @@ var StyledColorOption = _styledComponents.default.span(_templateObject4(), color
 }, function (_ref) {
   var colorOption = _ref.colorOption,
       selected = _ref.selected;
-  return colorOption === '#ffffff' ? "2px solid #ccc" : selected ? "2px dashed #ccc" : "2px solid ".concat(colorOption);
+  return colorOption === '#ffffff' ? "2px solid #ccc" : selected ? "2px solid #fff" : "2px solid ".concat(colorOption);
+}, function (props) {
+  return props.selected && "0 0 0 2px #444";
 }); // ! INPUT WRAPPER
 
 

@@ -38,12 +38,10 @@ export const StyledColorOption = styled.span`
     colorOption === '#ffffff'
       ? `2px solid #ccc`
       : selected
-      ? `2px dashed #ccc`
+      ? `2px solid #fff`
       : `2px solid ${colorOption}`};
 
-  &.selected {
-    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);
-  }
+  box-shadow: ${props => props.selected && `0 0 0 2px #444`}
 `
 
 // ! INPUT WRAPPER

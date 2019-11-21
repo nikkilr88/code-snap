@@ -11,7 +11,7 @@ export const AppContext = createContext()
 export const AppProvider = props => {
   // State
   const [color, setColor] = useState('#34495e')
-  const [theme, setTheme] = useState('monokai')
+  const [theme, setTheme] = useState('darcula')
   const [mode, setMode] = useState('javascript')
   const [font, setFont] = useState('')
   const [uploading, setUploading] = useState(false)

@@ -1,4 +1,4 @@
-import React, { Component, useContext } from 'react'
+import React, { Fragment, useContext, useEffect } from 'react'
 
 // Contexts
 import { AppContext } from '../../contexts/appContext'
@@ -33,9 +33,10 @@ require('codemirror/theme/dracula.css')
 require('codemirror/theme/icecoder.css')
 
 // Styles
-import { StyledCodeWrapper } from './CodeWrapper.styles'
+import { StyledCodeWrapper, StyledHelpMessage } from './CodeWrapper.styles'
 
 const CodeWrapper = () => {
+  // Context
   const { font, mode, theme, color, codeText, setCodeText } = useContext(
     AppContext
   )
@@ -48,16 +49,38 @@ const CodeWrapper = () => {
     autoCloseBrackets: true
   }
 
+  // Allow user to press ESC to unfocus code editor
+  const unfocusCodeMirror = event => {
+    const codeMirrorFocused = event.target.tagName === 'TEXTAREA'
+
+    // HACK: Is there a better way to reset focus?
+    if (event.key === 'Escape' && codeMirrorFocused) {
+      const temp = document.createElement('input')
+      document.body.appendChild(temp)
+      temp.focus()
+      document.body.removeChild(temp)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keyup', unfocusCodeMirror)
+  }, [])
+
   return (
-    <StyledCodeWrapper color={color} font={font} className="code-wrapper">
-      <CodeMirror
-        value={codeText}
-        options={options}
-        onBeforeChange={(editor, data, value) => {
-          setCodeText(value)
-        }}
-      />
-    </StyledCodeWrapper>
+    <Fragment>
+      <StyledCodeWrapper color={color} font={font} className="code-wrapper">
+        <CodeMirror
+          value={codeText}
+          options={options}
+          onBeforeChange={(editor, data, value) => {
+            setCodeText(value)
+          }}
+        />
+      </StyledCodeWrapper>
+      <StyledHelpMessage>
+        Press <span>ESC</span> to unfocus code editor.
+      </StyledHelpMessage>
+    </Fragment>
   )
 }
 

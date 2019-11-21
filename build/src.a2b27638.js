@@ -32548,7 +32548,7 @@ var AppProvider = function AppProvider(props) {
       color = _useState2[0],
       setColor = _useState2[1];
 
-  var _useState3 = (0, _react.useState)('monokai'),
+  var _useState3 = (0, _react.useState)('darcula'),
       _useState4 = _slicedToArray(_useState3, 2),
       theme = _useState4[0],
       setTheme = _useState4[1];
@@ -52118,14 +52118,24 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.StyledCodeWrapper = void 0;
+exports.StyledHelpMessage = exports.StyledCodeWrapper = void 0;
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _templateObject2() {
+  var data = _taggedTemplateLiteral(["\n  text-align: center;\n  font-size: 14px;\n  margin-top: 25px;\n  color: #777;\n\n  span {\n    border: 2px solid #ccc;\n    box-shadow: 2px 2px 0 #ccc;\n    padding: 1px 3px;\n    font-weight: bold;\n    color: #777;\n  }\n"]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  margin: 100px auto 50px auto;\n  padding: 50px;\n  width: auto;\n  max-width: 700px;\n  display: table;\n  background: ", ";\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 18px;\n    line-height: 1.5;\n    font-family: ", ", monospace;\n    font-variant-ligatures: contextual;\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-selected {\n    width: 100% !important;\n    left: 0 !important;\n    right: 0 !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 15px !important;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  margin: 150px auto 0;\n  padding: 50px;\n  width: auto;\n  max-width: 700px;\n  display: table;\n  background: ", ";\n\n  .CodeMirror {\n    height: auto;\n    width: auto;\n    text-align: left;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    font-size: 18px;\n    line-height: 1.5;\n    font-family: ", ", monospace;\n    font-variant-ligatures: contextual;\n  }\n\n  .CodeMirror-scroll {\n    overflow: hidden !important;\n  }\n\n  .CodeMirror-selected {\n    width: 100% !important;\n    left: 0 !important;\n    right: 0 !important;\n  }\n\n  .CodeMirror-lines {\n    padding: 15px !important;\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -52143,6 +52153,10 @@ var StyledCodeWrapper = _styledComponents.default.div(_templateObject(), functio
 });
 
 exports.StyledCodeWrapper = StyledCodeWrapper;
+
+var StyledHelpMessage = _styledComponents.default.p(_templateObject2());
+
+exports.StyledHelpMessage = StyledHelpMessage;
 },{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"src/components/CodeWrapper/CodeWrapper.component.jsx":[function(require,module,exports) {
 "use strict";
 
@@ -52207,6 +52221,7 @@ require('codemirror/theme/icecoder.css'); // Styles
 
 
 var CodeWrapper = function CodeWrapper() {
+  // Context
   var _useContext = (0, _react.useContext)(_appContext.AppContext),
       font = _useContext.font,
       mode = _useContext.mode,
@@ -52220,9 +52235,25 @@ var CodeWrapper = function CodeWrapper() {
     theme: theme,
     lineNumbers: false,
     lineWrapping: true,
-    autoCloseBrackets: true
+    autoCloseBrackets: true // Allow user to press ESC to unfocus code editor
+
   };
-  return _react.default.createElement(_CodeWrapper.StyledCodeWrapper, {
+
+  var unfocusCodeMirror = function unfocusCodeMirror(event) {
+    var codeMirrorFocused = event.target.tagName === 'TEXTAREA'; // HACK: Is there a better way to reset focus?
+
+    if (event.key === 'Escape' && codeMirrorFocused) {
+      var temp = document.createElement('input');
+      document.body.appendChild(temp);
+      temp.focus();
+      document.body.removeChild(temp);
+    }
+  };
+
+  (0, _react.useEffect)(function () {
+    document.addEventListener('keyup', unfocusCodeMirror);
+  }, []);
+  return _react.default.createElement(_react.Fragment, null, _react.default.createElement(_CodeWrapper.StyledCodeWrapper, {
     color: color,
     font: font,
     className: "code-wrapper"
@@ -52232,7 +52263,7 @@ var CodeWrapper = function CodeWrapper() {
     onBeforeChange: function onBeforeChange(editor, data, value) {
       setCodeText(value);
     }
-  }));
+  })), _react.default.createElement(_CodeWrapper.StyledHelpMessage, null, "Press ", _react.default.createElement("span", null, "ESC"), " to unfocus code editor."));
 };
 
 var _default = CodeWrapper;
@@ -52271,6 +52302,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var ThemePicker = function ThemePicker() {
   // Context
   var _useContext = (0, _react.useContext)(_appContext.AppContext),
+      theme = _useContext.theme,
       changeTheme = _useContext.changeTheme; // Theme options
 
 
@@ -52336,7 +52368,7 @@ var ThemePicker = function ThemePicker() {
     return _react.default.createElement("select", {
       name: "theme",
       id: "theme-picker",
-      defaultValue: "monokai",
+      defaultValue: theme,
       onChange: changeTheme,
       "aria-label": "Code editor theme"
     }, _react.default.createElement("optgroup", {
@@ -52365,7 +52397,115 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _default = _ThemePicker.default;
 exports.default = _default;
-},{"./ThemePicker.component":"src/components/ThemePicker/ThemePicker.component.jsx"}],"node_modules/@fortawesome/fontawesome-svg-core/index.es.js":[function(require,module,exports) {
+},{"./ThemePicker.component":"src/components/ThemePicker/ThemePicker.component.jsx"}],"src/components/Modal/Modal.styles.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.StyledModal = exports.StyledModalWrapper = void 0;
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject2() {
+  var data = _taggedTemplateLiteral(["\n  position: absolute;\n  top: 55px;\n  left: 50%;\n  transform: translateX(-50%);\n  width: 230px;\n  padding: 5px;\n  background: #fff;\n  border-radius: 5px;\n  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n  display: flex;\n  justify-content: space-around;\n  flex-wrap: wrap;\n  z-index: 999;\n\n  &:after {\n    content: '';\n    position: absolute;\n    top: -8px;\n    left: 50%;\n    transform: translateX(-50%);\n    width: 0;\n    height: 0;\n    border-left: 10px solid transparent;\n    border-right: 10px solid transparent;\n    border-bottom: 10px solid #fff;\n  }\n"]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n  position: relative;\n  display: flex;\n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+// ! WRAPPER
+var StyledModalWrapper = _styledComponents.default.div(_templateObject()); // ! COLOR PICKER
+
+
+exports.StyledModalWrapper = StyledModalWrapper;
+
+var StyledModal = _styledComponents.default.div(_templateObject2());
+
+exports.StyledModal = StyledModal;
+},{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"src/components/Modal/Modal.component.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _Modal = require("./Modal.styles");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var NavModal = _react.default.forwardRef(function (props, ref) {
+  // Close modal when user clicks out
+  var handleOutsideClick = function handleOutsideClick(event) {
+    var clickInside = ref.current && ref.current.contains(event.target);
+    props.setShowModal(function (prevState) {
+      return clickInside ? true : !prevState;
+    });
+  }; // Close modal when ESC is pressed or if user tabs out
+
+
+  var handleKeyPress = function handleKeyPress(event) {
+    var modalFocused = ref.current && ref.current.contains(event.target);
+
+    switch (event.key) {
+      case 'Escape':
+        // Close color menu
+        props.setShowModal(false);
+      // Put focus back on selected color button
+      // FIXME: Set focus to parent button
+      // if (modalFocused) return ref.current.focus()
+
+      case 'Tab':
+        // If user tabs out of color picker menu, close menu
+        if (!modalFocused) return props.setShowModal(false);
+
+      default:
+        break;
+    }
+  }; // Similar to componentDidMount
+
+
+  (0, _react.useEffect)(function () {
+    // Close modal on outside click
+    document.addEventListener('click', handleOutsideClick); // Add tab and esc key functionality
+
+    document.addEventListener('keyup', handleKeyPress); // Remove event listener before unmount
+
+    return function () {
+      document.removeEventListener('click', handleOutsideClick);
+      document.removeEventListener('keyup', handleKeyPress);
+    };
+  }, [ref]);
+  return _react.default.createElement(_Modal.StyledModal, {
+    ref: ref
+  }, props.children);
+});
+
+var _default = NavModal;
+exports.default = _default;
+},{"react":"node_modules/react/index.js","./Modal.styles":"src/components/Modal/Modal.styles.js"}],"node_modules/@fortawesome/fontawesome-svg-core/index.es.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -61946,7 +62086,7 @@ exports.fas = _iconsCache;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.StyledInputWrapper = exports.StyledColorOption = exports.StyledColorPickerModal = exports.StyledColorPickerWrapper = void 0;
+exports.StyledInputWrapper = exports.StyledColorOption = exports.StyledSelectedColor = exports.StyledColorWrapper = void 0;
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
@@ -61973,7 +62113,7 @@ function _templateObject3() {
 }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["\n  position: absolute;\n  top: 55px;\n  right: -36px;\n  width: 230px;\n  padding: 5px;\n  background: #fff;\n  border-radius: 5px;\n  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n  display: flex;\n  justify-content: space-around;\n  flex-wrap: wrap;\n  z-index: 999;\n\n  &:after {\n    content: '';\n    position: absolute;\n    top: -8px;\n    right: 47px;\n    width: 0;\n    height: 0;\n    border-left: 10px solid transparent;\n    border-right: 10px solid transparent;\n    border-bottom: 10px solid #fff;\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n\n  &.color {\n    margin: 3px;\n    display: inline-block;\n    height: 40px;\n    width: 40px;\n    border-radius: 50%;\n    cursor: pointer;\n  }\n\n  &.color.selected {\n    padding: 0;\n    margin: 0;\n    border: 2px solid #444;\n    background: ", ";\n  }\n"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -61983,7 +62123,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  position: relative;\n  display: flex;\n\n  .colors {\n    display: flex;\n    flex-wrap: wrap;\n    justify-content: space-between;\n  }\n\n  .color {\n    margin: 3px;\n    display: inline-block;\n    height: 40px;\n    width: 40px;\n    border-radius: 50%;\n    cursor: pointer;\n  }\n\n  .color.selected {\n    padding: 0;\n    margin: 0;\n    border: 2px solid #444;\n    background: ", ";\n  }\n\n  .selected {\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  .colors {\n    display: flex;\n    flex-wrap: wrap;\n    justify-content: space-between;\n  }\n\n  .color {\n    margin: 3px;\n    display: inline-block;\n    height: 40px;\n    width: 40px;\n    border-radius: 50%;\n    cursor: pointer;\n  }\n\n  .selected {\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -61995,17 +62135,17 @@ function _templateObject() {
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 // ! WRAPPER
-var StyledColorPickerWrapper = _styledComponents.default.div(_templateObject(), function (props) {
+var StyledColorWrapper = _styledComponents.default.div(_templateObject()); // TODO: Fix repetitive styles
+
+
+exports.StyledColorWrapper = StyledColorWrapper;
+
+var StyledSelectedColor = _styledComponents.default.button(_templateObject2(), function (props) {
   return props.color;
-}); // ! COLOR PICKER
+}); // ! COLOR OPTION BUTTON
 
 
-exports.StyledColorPickerWrapper = StyledColorPickerWrapper;
-
-var StyledColorPickerModal = _styledComponents.default.div(_templateObject2()); // ! COLOR OPTION BUTTON
-
-
-exports.StyledColorPickerModal = StyledColorPickerModal;
+exports.StyledSelectedColor = StyledSelectedColor;
 
 var StyledColorOption = _styledComponents.default.span(_templateObject3(), function (props) {
   return props.colorOption;
@@ -62031,6 +62171,8 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _Modal = _interopRequireDefault(require("../Modal/Modal.component"));
+
 var _appContext = require("../../contexts/appContext");
 
 var _reactFontawesome = require("@fortawesome/react-fontawesome");
@@ -62038,6 +62180,10 @@ var _reactFontawesome = require("@fortawesome/react-fontawesome");
 var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
 
 var _ColorPicker = require("./ColorPicker.styles");
+
+var _Modal2 = require("../Modal/Modal.styles");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -62065,70 +62211,35 @@ var ColorPicker = function ColorPicker() {
 
 
   var colorPicker = (0, _react.useRef)();
-  var colorPickerSelected = (0, _react.useRef)(); // Toggle picker options visibility
-
-  var togglePicker = function togglePicker(e) {
-    var btnClick = !e.target.classList.contains('selected');
-    var clickInside = colorPicker.current && colorPicker.current.contains(e.target);
-    setShowPicker(function (prevState) {
-      return clickInside ? true : btnClick ? false : !prevState;
-    });
-  }; // Close Toggle picker when ESC is pressed or when focus is lost
-
-
-  var closePicker = function closePicker(event) {
-    switch (event.key) {
-      case 'Escape':
-        colorPickerSelected.current.focus();
-        setShowPicker(false);
-        break;
-
-      case 'Tab':
-        if (colorPicker.current && !colorPicker.current.contains(event.target)) {
-          setShowPicker(false);
-        }
-
-        break;
-
-      default:
-        break;
-    }
-  }; // Color options
-
+  var colorPickerSelected = (0, _react.useRef)(); // Color options
 
   var colors = ['#3498db', '#2980b9', '#2ecc71', '#16a085', '#e74c3c', '#c0392b', '#34495e', '#2c3e50', '#8e44ad', '#333333', '#000000', '#ffffff']; // Color options JSX
 
   var colorOptions = colors.map(function (colorOption, i) {
     return _react.default.createElement(_ColorPicker.StyledColorOption, {
-      className: "color option",
       key: colorOption,
       onClick: changeColor,
+      className: "color option",
       "aria-label": colorOption,
       "data-color": colorOption,
       colorOption: colorOption,
       selected: color === colorOption
     });
-  }); // This runs once on mount
-
-  (0, _react.useEffect)(function () {
-    // Add event listener to toggle picker
-    document.addEventListener('click', togglePicker);
-    document.addEventListener('keyup', closePicker); // Remove event listener before unmount
-
-    return function () {
-      document.removeEventListener('click', togglePicker);
-      document.removeEventListener('keyup', closePicker);
-    };
-  }, []);
-  return _react.default.createElement(_ColorPicker.StyledColorPickerWrapper, {
-    color: color
-  }, _react.default.createElement("button", {
-    "aria-label": "Accent color ".concat(color),
+  });
+  return _react.default.createElement(_Modal2.StyledModalWrapper, null, _react.default.createElement(_ColorPicker.StyledSelectedColor, {
+    color: color,
+    ref: colorPickerSelected,
     className: "color selected",
-    ref: colorPickerSelected
-  }), showPicker && _react.default.createElement(_ColorPicker.StyledColorPickerModal, {
-    ref: colorPicker
-  }, _react.default.createElement("div", {
+    "aria-label": "Accent color ".concat(color),
+    onClick: function onClick() {
+      return setShowPicker(function (prevState) {
+        return !prevState;
+      });
+    }
+  }), showPicker && _react.default.createElement(_Modal.default, {
+    ref: colorPicker,
+    setShowModal: setShowPicker
+  }, _react.default.createElement(_ColorPicker.StyledColorWrapper, null, _react.default.createElement("div", {
     className: "colors"
   }, colorOptions), _react.default.createElement(_ColorPicker.StyledInputWrapper, null, _react.default.createElement("div", {
     className: "icon-wrapper"
@@ -62142,12 +62253,12 @@ var ColorPicker = function ColorPicker() {
     className: "color-input",
     placeholder: "Hex color code",
     value: color.replace('#', '')
-  }))));
+  })))));
 };
 
 var _default = ColorPicker;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","../../contexts/appContext":"src/contexts/appContext.js","@fortawesome/react-fontawesome":"node_modules/@fortawesome/react-fontawesome/index.es.js","@fortawesome/free-solid-svg-icons":"node_modules/@fortawesome/free-solid-svg-icons/index.es.js","./ColorPicker.styles":"src/components/ColorPicker/ColorPicker.styles.js"}],"src/components/ColorPicker/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../Modal/Modal.component":"src/components/Modal/Modal.component.jsx","../../contexts/appContext":"src/contexts/appContext.js","@fortawesome/react-fontawesome":"node_modules/@fortawesome/react-fontawesome/index.es.js","@fortawesome/free-solid-svg-icons":"node_modules/@fortawesome/free-solid-svg-icons/index.es.js","./ColorPicker.styles":"src/components/ColorPicker/ColorPicker.styles.js","../Modal/Modal.styles":"src/components/Modal/Modal.styles.js"}],"src/components/ColorPicker/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -64963,11 +65074,21 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.StyledNav = void 0;
+exports.StyledDownloadOptions = exports.StyledNav = void 0;
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject2() {
+  var data = _taggedTemplateLiteral(["\n  width: 100%;\n\n  button {\n    display: block;\n    width: 100%;\n    padding: 20px;\n    border: none;\n    background: none;\n    border-bottom: 1px solid #ccc;\n    font-weight: bold;\n    color: #333;\n    cursor: pointer;\n\n    &:last-of-type {\n      border: none;\n    }\n\n    &:hover {\n      background: #e74c3c;\n      color: #fff;\n    }\n\n    &:disabled {\n      opacity: 0.5;\n      cursor: not-allowed;\n    }\n  }\n"]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
 
 function _templateObject() {
   var data = _taggedTemplateLiteral(["\n  position: sticky;\n  top: 0;\n  padding: 25px 100px;\n  background: #2b2b2b;\n  border-bottom: 2px solid #eee;\n  display: flex;\n  justify-content: flex-end;\n  align-items: center;\n  z-index: 999;\n\n  .logo {\n    margin-right: auto;\n    color: #eee;\n    font-size: 18px;\n  }\n\n  .accent {\n    color: #e74c3c;\n    font-weight: bold;\n  }\n\n  .nav-button {\n    margin: 0 5px;\n    padding: 10px 20px;\n    height: 40px;\n    border: none;\n    font-weight: bold;\n    border-radius: 100px;\n    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.2), 0 15px 12px rgba(0, 0, 0, 0.1);\n    cursor: pointer;\n  }\n\n  .save-snap {\n    background: linear-gradient(to bottom right, #e67e22, #e74c3c);\n    color: #fff;\n  }\n\n  .share-twitter {\n    background: linear-gradient(to bottom right, #00acee, #2980b9);\n    color: #fff;\n  }\n\n  .nav-group {\n    display: flex;\n    align-items: center;\n    margin-right: 25px;\n  }\n"]);
@@ -64984,6 +65105,10 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 var StyledNav = _styledComponents.default.nav(_templateObject());
 
 exports.StyledNav = StyledNav;
+
+var StyledDownloadOptions = _styledComponents.default.div(_templateObject2());
+
+exports.StyledDownloadOptions = StyledDownloadOptions;
 },{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"src/components/Nav/Nav.component.jsx":[function(require,module,exports) {
 "use strict";
 
@@ -65004,6 +65129,8 @@ var _ModeSelect = _interopRequireDefault(require("../ModeSelect"));
 
 var _Loader = _interopRequireDefault(require("../Loader"));
 
+var _Modal = _interopRequireDefault(require("../Modal/Modal.component"));
+
 var _reactFontawesome = require("@fortawesome/react-fontawesome");
 
 var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
@@ -65012,22 +65139,37 @@ var _fontawesomeFreeBrands = require("@fortawesome/fontawesome-free-brands");
 
 var _Nav = require("./Nav.styles");
 
+var _Modal2 = require("../Modal/Modal.styles");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-// Context
-// Components
-// Icons
-// Styles
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 var Nav = function Nav() {
+  // State
+  var _useState = (0, _react.useState)(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      showDownloadOptions = _useState2[0],
+      setShowDownloadOptions = _useState2[1]; // Context
+
+
   var _useContext = (0, _react.useContext)(_appContext.AppContext),
       saveSnap = _useContext.saveSnap,
       shareSnap = _useContext.shareSnap,
-      uploading = _useContext.uploading;
+      uploading = _useContext.uploading; // Refs
 
+
+  var downloadOptions = (0, _react.useRef)();
   return _react.default.createElement(_Nav.StyledNav, null, _react.default.createElement("p", {
     className: "logo"
   }, "code", _react.default.createElement("span", {
@@ -65036,13 +65178,24 @@ var Nav = function Nav() {
     className: "nav-group"
   }, _react.default.createElement(_ModeSelect.default, null), _react.default.createElement(_ThemePicker.default, null), _react.default.createElement(_ColorPicker.default, null)), _react.default.createElement("div", {
     className: "nav-group"
-  }, _react.default.createElement("button", {
+  }, _react.default.createElement(_Modal2.StyledModalWrapper, null, _react.default.createElement("button", {
     className: "save-snap nav-button",
-    onClick: saveSnap
+    onClick: function onClick() {
+      return setShowDownloadOptions(function (prevState) {
+        return !prevState;
+      });
+    }
   }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
     className: "font-awesome",
     icon: _freeSolidSvgIcons.faDownload
-  }), ' ', "Download PNG"), _react.default.createElement("button", {
+  }), ' ', "Download"), showDownloadOptions && _react.default.createElement(_Modal.default, {
+    ref: downloadOptions,
+    setShowModal: setShowDownloadOptions
+  }, _react.default.createElement(_Nav.StyledDownloadOptions, null, _react.default.createElement("button", {
+    onClick: saveSnap
+  }, "Download PNG"), _react.default.createElement("button", {
+    disabled: true
+  }, "Download SVG")))), _react.default.createElement("button", {
     className: "share-twitter nav-button",
     onClick: shareSnap
   }, !uploading ? _react.default.createElement(_react.Fragment, null, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
@@ -65053,7 +65206,7 @@ var Nav = function Nav() {
 
 var _default = Nav;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","../../contexts/appContext":"src/contexts/appContext.js","../ThemePicker":"src/components/ThemePicker/index.js","../ColorPicker":"src/components/ColorPicker/index.js","../ModeSelect":"src/components/ModeSelect/index.js","../Loader":"src/components/Loader/index.js","@fortawesome/react-fontawesome":"node_modules/@fortawesome/react-fontawesome/index.es.js","@fortawesome/free-solid-svg-icons":"node_modules/@fortawesome/free-solid-svg-icons/index.es.js","@fortawesome/fontawesome-free-brands":"node_modules/@fortawesome/fontawesome-free-brands/index.es.js","./Nav.styles":"src/components/Nav/Nav.styles.js"}],"src/components/Nav/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../../contexts/appContext":"src/contexts/appContext.js","../ThemePicker":"src/components/ThemePicker/index.js","../ColorPicker":"src/components/ColorPicker/index.js","../ModeSelect":"src/components/ModeSelect/index.js","../Loader":"src/components/Loader/index.js","../Modal/Modal.component":"src/components/Modal/Modal.component.jsx","@fortawesome/react-fontawesome":"node_modules/@fortawesome/react-fontawesome/index.es.js","@fortawesome/free-solid-svg-icons":"node_modules/@fortawesome/free-solid-svg-icons/index.es.js","@fortawesome/fontawesome-free-brands":"node_modules/@fortawesome/fontawesome-free-brands/index.es.js","./Nav.styles":"src/components/Nav/Nav.styles.js","../Modal/Modal.styles":"src/components/Modal/Modal.styles.js"}],"src/components/Nav/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -65174,7 +65327,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56938" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51911" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

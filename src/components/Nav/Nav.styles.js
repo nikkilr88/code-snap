@@ -49,3 +49,33 @@ export const StyledNav = styled.nav`
     margin-right: 25px;
   }
 `
+
+export const StyledDownloadOptions = styled.div`
+  width: 100%;
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    border: none;
+    background: none;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+
+    &:last-of-type {
+      border: none;
+    }
+
+    &:hover {
+      background: #e74c3c;
+      color: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+`

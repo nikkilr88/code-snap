@@ -5,7 +5,7 @@ import { AppContext } from '../../contexts/appContext'
 
 const ThemePicker = () => {
   // Context
-  const { changeTheme } = useContext(AppContext)
+  const { theme, changeTheme } = useContext(AppContext)
 
   // Theme options
   const themes = [
@@ -46,7 +46,7 @@ const ThemePicker = () => {
       <select
         name="theme"
         id="theme-picker"
-        defaultValue="monokai"
+        defaultValue={theme}
         onChange={changeTheme}
         aria-label="Code editor theme"
       >

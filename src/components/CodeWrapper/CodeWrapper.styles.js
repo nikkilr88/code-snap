@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const StyledCodeWrapper = styled.div`
-  margin: 100px auto 50px auto;
+  margin: 150px auto 0;
   padding: 50px;
   width: auto;
   max-width: 700px;
@@ -31,5 +31,20 @@ export const StyledCodeWrapper = styled.div`
 
   .CodeMirror-lines {
     padding: 15px !important;
+  }
+`
+
+export const StyledHelpMessage = styled.p`
+  text-align: center;
+  font-size: 14px;
+  margin-top: 25px;
+  color: #777;
+
+  span {
+    border: 2px solid #ccc;
+    box-shadow: 2px 2px 0 #ccc;
+    padding: 1px 3px;
+    font-weight: bold;
+    color: #777;
   }
 `

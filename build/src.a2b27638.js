@@ -32571,8 +32571,10 @@ var AppProvider = function AppProvider(props) {
   var _useState11 = (0, _react.useState)('// Pssst... Paste your code here'),
       _useState12 = _slicedToArray(_useState11, 2),
       codeText = _useState12[0],
-      setCodeText = _useState12[1]; // Update codeMirror text
+      setCodeText = _useState12[1]; // Refs
 
+
+  var codeWrapper = (0, _react.useRef)(); // Update codeMirror text
 
   var handleOnChange = function handleOnChange(val) {
     setCodeText(val);
@@ -32598,17 +32600,16 @@ var AppProvider = function AppProvider(props) {
 
 
   var domToImage = function domToImage() {
-    // FIXME: Is there a better way to implement this?
-    var wrapper = document.querySelector('.code-wrapper');
-    var scale = 2;
-    return _domToImage.default.toBlob(wrapper, {
+    var scale = 2; // Target codeWrapper (ref declared above), and let domtoimage do its thing!
+
+    return _domToImage.default.toBlob(codeWrapper.current, {
       style: {
         margin: '0',
         transform: "scale(".concat(scale, ")"),
         transformOrigin: 'top left'
       },
-      width: wrapper.clientWidth * scale,
-      height: wrapper.clientHeight * scale
+      width: codeWrapper.current.clientWidth * scale,
+      height: codeWrapper.current.clientHeight * scale
     });
   }; // TODO: Add SVG download option
   // Save DOM image to computer
@@ -32665,7 +32666,8 @@ var AppProvider = function AppProvider(props) {
       codeText: codeText,
       setCodeText: setCodeText,
       saveSnap: saveSnap,
-      shareSnap: shareSnap
+      shareSnap: shareSnap,
+      codeWrapper: codeWrapper
     }
   }, props.children);
 };
@@ -52229,7 +52231,8 @@ var CodeWrapper = function CodeWrapper() {
       theme = _useContext.theme,
       color = _useContext.color,
       codeText = _useContext.codeText,
-      setCodeText = _useContext.setCodeText;
+      setCodeText = _useContext.setCodeText,
+      codeWrapper = _useContext.codeWrapper;
 
   var options = {
     mode: mode,
@@ -52263,7 +52266,8 @@ var CodeWrapper = function CodeWrapper() {
   return _react.default.createElement(_react.Fragment, null, _react.default.createElement(_CodeWrapper.StyledCodeWrapper, {
     color: color,
     font: font,
-    className: "code-wrapper"
+    className: "code-wrapper",
+    ref: codeWrapper
   }, _react.default.createElement(_reactCodemirror.Controlled, {
     value: codeText,
     options: options,
@@ -65352,7 +65356,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56185" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57409" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

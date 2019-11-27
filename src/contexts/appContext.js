@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react'
+import React, { useState, createContext, useRef } from 'react'
 
 // Third-party packages
 import domtoimage from 'dom-to-image'
@@ -16,6 +16,9 @@ export const AppProvider = props => {
   const [font, setFont] = useState('')
   const [uploading, setUploading] = useState(false)
   const [codeText, setCodeText] = useState('// Pssst... Paste your code here')
+
+  // Refs
+  const codeWrapper = useRef()
 
   // Update codeMirror text
   const handleOnChange = val => {
@@ -42,18 +45,17 @@ export const AppProvider = props => {
 
   // Capture DOM screenshot
   const domToImage = () => {
-    // FIXME: Is there a better way to implement this?
-    const wrapper = document.querySelector('.code-wrapper')
     const scale = 2
 
-    return domtoimage.toBlob(wrapper, {
+    // Target codeWrapper (ref declared above), and let domtoimage do its thing!
+    return domtoimage.toBlob(codeWrapper.current, {
       style: {
         margin: '0',
         transform: `scale(${scale})`,
         transformOrigin: 'top left'
       },
-      width: wrapper.clientWidth * scale,
-      height: wrapper.clientHeight * scale
+      width: codeWrapper.current.clientWidth * scale,
+      height: codeWrapper.current.clientHeight * scale
     })
   }
 
@@ -118,7 +120,8 @@ export const AppProvider = props => {
         codeText,
         setCodeText,
         saveSnap,
-        shareSnap
+        shareSnap,
+        codeWrapper
       }}
     >
       {props.children}

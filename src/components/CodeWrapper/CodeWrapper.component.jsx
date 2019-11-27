@@ -64,6 +64,14 @@ const CodeWrapper = () => {
 
   useEffect(() => {
     document.addEventListener('keyup', unfocusCodeMirror)
+
+    // HACK: Target CodeMirror hidden textarea to make more accesible
+    // Is there a better (more React) way to do this?
+    const codeEditor = document.querySelector('textarea')
+
+    // Set id and label
+    codeEditor.id = 'codeEditor'
+    codeEditor.setAttribute('aria-label', 'code editor')
   }, [])
 
   return (
@@ -82,7 +90,7 @@ const CodeWrapper = () => {
 
       {/* ESCAPE TIP MESSAGE */}
 
-      <StyledHelpMessage>
+      <StyledHelpMessage aria-labelledby="codeEditor">
         Press <span>ESC</span> to unfocus code editor.
       </StyledHelpMessage>
     </Fragment>

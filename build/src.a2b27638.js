@@ -52252,7 +52252,13 @@ var CodeWrapper = function CodeWrapper() {
   };
 
   (0, _react.useEffect)(function () {
-    document.addEventListener('keyup', unfocusCodeMirror);
+    document.addEventListener('keyup', unfocusCodeMirror); // HACK: Target CodeMirror hidden textarea to make more accesible
+    // Is there a better (more React) way to do this?
+
+    var codeEditor = document.querySelector('textarea'); // Set id and label
+
+    codeEditor.id = 'codeEditor';
+    codeEditor.setAttribute('aria-label', 'code editor');
   }, []);
   return _react.default.createElement(_react.Fragment, null, _react.default.createElement(_CodeWrapper.StyledCodeWrapper, {
     color: color,
@@ -52264,7 +52270,9 @@ var CodeWrapper = function CodeWrapper() {
     onBeforeChange: function onBeforeChange(editor, data, value) {
       setCodeText(value);
     }
-  })), _react.default.createElement(_CodeWrapper.StyledHelpMessage, null, "Press ", _react.default.createElement("span", null, "ESC"), " to unfocus code editor."));
+  })), _react.default.createElement(_CodeWrapper.StyledHelpMessage, {
+    "aria-labelledby": "codeEditor"
+  }, "Press ", _react.default.createElement("span", null, "ESC"), " to unfocus code editor."));
 };
 
 var _default = CodeWrapper;
@@ -65344,7 +65352,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57975" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56185" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

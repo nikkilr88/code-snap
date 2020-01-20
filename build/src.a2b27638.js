@@ -32596,13 +32596,23 @@ var AppProvider = function AppProvider(props) {
   var changeMode = function changeMode(e) {
     var mode = e.target.value;
     setMode(mode);
-  }; // Capture DOM screenshot
+  }; // Generate date for image file name
 
 
-  var domToImage = function domToImage() {
-    var scale = 2; // Target codeWrapper (ref declared above), and let domtoimage do its thing!
+  var generateFileNameDate = function generateFileNameDate() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    return "".concat(month, "-").concat(day, "-").concat(year, "_").concat(hour, "-").concat(minutes);
+  }; // Generate dom-to-image settings
 
-    return _domToImage.default.toBlob(codeWrapper.current, {
+
+  var generateDomToImageSettings = function generateDomToImageSettings() {
+    var scale = 2;
+    return {
       style: {
         margin: '0',
         transform: "scale(".concat(scale, ")"),
@@ -32610,20 +32620,20 @@ var AppProvider = function AppProvider(props) {
       },
       width: codeWrapper.current.clientWidth * scale,
       height: codeWrapper.current.clientHeight * scale
+    };
+  }; // Download SVG
+
+
+  var saveSVG = function saveSVG() {
+    _domToImage.default.toSvg(codeWrapper.current, generateDomToImageSettings()).then(function (dataUrl) {
+      (0, _fileSaver.saveAs)(dataUrl, "code-snap_".concat(generateFileNameDate(), ".svg"));
     });
-  }; // TODO: Add SVG download option
-  // Save DOM image to computer
+  }; // Save DOM image to computer
 
 
-  var saveSnap = function saveSnap() {
-    var date = new Date();
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-    var hour = date.getHours();
-    var minutes = date.getMinutes();
-    domToImage().then(function (blob) {
-      (0, _fileSaver.saveAs)(blob, "code-snap_".concat(month, "-").concat(day, "-").concat(year, "_").concat(hour, "-").concat(minutes, ".png"));
+  var savePNG = function savePNG() {
+    _domToImage.default.toBlob(codeWrapper.current, generateDomToImageSettings()).then(function (blob) {
+      (0, _fileSaver.saveAs)(blob, "code-snap_".concat(generateFileNameDate(), ".png"));
     });
   }; // Share DOM screenshot to Twitter
 
@@ -32665,8 +32675,9 @@ var AppProvider = function AppProvider(props) {
       setUploading: setUploading,
       codeText: codeText,
       setCodeText: setCodeText,
-      saveSnap: saveSnap,
+      savePNG: savePNG,
       shareSnap: shareSnap,
+      saveSVG: saveSVG,
       codeWrapper: codeWrapper
     }
   }, props.children);
@@ -65192,9 +65203,10 @@ var Nav = function Nav() {
 
 
   var _useContext = (0, _react.useContext)(_appContext.AppContext),
-      saveSnap = _useContext.saveSnap,
+      savePNG = _useContext.savePNG,
       shareSnap = _useContext.shareSnap,
-      uploading = _useContext.uploading; // Refs
+      uploading = _useContext.uploading,
+      saveSVG = _useContext.saveSVG; // Refs
 
 
   var downloadOptions = (0, _react.useRef)();
@@ -65220,9 +65232,9 @@ var Nav = function Nav() {
     ref: downloadOptions,
     setShowModal: setShowDownloadOptions
   }, _react.default.createElement(_Nav.StyledDownloadOptions, null, _react.default.createElement("button", {
-    onClick: saveSnap
+    onClick: savePNG
   }, "Download PNG"), _react.default.createElement("hr", null), _react.default.createElement("button", {
-    disabled: true
+    onClick: saveSVG
   }, "Download SVG")))), _react.default.createElement("button", {
     onClick: shareSnap,
     "aria-label": "Share to Twitter",
@@ -65356,7 +65368,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57409" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58248" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

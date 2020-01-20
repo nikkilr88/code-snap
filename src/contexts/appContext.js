@@ -43,25 +43,8 @@ export const AppProvider = props => {
     setMode(mode)
   }
 
-  // Capture DOM screenshot
-  const domToImage = () => {
-    const scale = 2
-
-    // Target codeWrapper (ref declared above), and let domtoimage do its thing!
-    return domtoimage.toBlob(codeWrapper.current, {
-      style: {
-        margin: '0',
-        transform: `scale(${scale})`,
-        transformOrigin: 'top left'
-      },
-      width: codeWrapper.current.clientWidth * scale,
-      height: codeWrapper.current.clientHeight * scale
-    })
-  }
-
-  // TODO: Add SVG download option
-  // Save DOM image to computer
-  const saveSnap = () => {
+  // Generate date for image file name
+  const generateFileNameDate = () => {
     const date = new Date()
     const day = date.getDate()
     const month = date.getMonth() + 1
@@ -69,9 +52,40 @@ export const AppProvider = props => {
     const hour = date.getHours()
     const minutes = date.getMinutes()
 
-    domToImage().then(blob => {
-      saveAs(blob, `code-snap_${month}-${day}-${year}_${hour}-${minutes}.png`)
-    })
+    return `${month}-${day}-${year}_${hour}-${minutes}`
+  }
+
+  // Generate dom-to-image settings
+  const generateDomToImageSettings = () => {
+    const scale = 2
+
+    return {
+      style: {
+        margin: '0',
+        transform: `scale(${scale})`,
+        transformOrigin: 'top left'
+      },
+      width: codeWrapper.current.clientWidth * scale,
+      height: codeWrapper.current.clientHeight * scale
+    }
+  }
+
+  // Download SVG
+  const saveSVG = () => {
+    domtoimage
+      .toSvg(codeWrapper.current, generateDomToImageSettings())
+      .then(dataUrl => {
+        saveAs(dataUrl, `code-snap_${generateFileNameDate()}.svg`)
+      })
+  }
+
+  // Save DOM image to computer
+  const savePNG = () => {
+    domtoimage
+      .toBlob(codeWrapper.current, generateDomToImageSettings())
+      .then(blob => {
+        saveAs(blob, `code-snap_${generateFileNameDate()}.png`)
+      })
   }
 
   // Share DOM screenshot to Twitter
@@ -119,8 +133,9 @@ export const AppProvider = props => {
         setUploading,
         codeText,
         setCodeText,
-        saveSnap,
+        savePNG,
         shareSnap,
+        saveSVG,
         codeWrapper
       }}
     >

@@ -24,7 +24,7 @@ const Nav = () => {
   const [showDownloadOptions, setShowDownloadOptions] = useState(false)
 
   // Context
-  const { saveSnap, shareSnap, uploading } = useContext(AppContext)
+  const { savePNG, shareSnap, uploading, saveSVG } = useContext(AppContext)
 
   // Refs
   const downloadOptions = useRef()
@@ -67,9 +67,9 @@ const Nav = () => {
               setShowModal={setShowDownloadOptions}
             >
               <StyledDownloadOptions>
-                <button onClick={saveSnap}>Download PNG</button>
+                <button onClick={savePNG}>Download PNG</button>
                 <hr />
-                <button disabled>Download SVG</button>
+                <button onClick={saveSVG}>Download SVG</button>
               </StyledDownloadOptions>
             </NavModal>
           )}

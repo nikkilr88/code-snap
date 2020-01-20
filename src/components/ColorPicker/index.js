@@ -1,4 +1,3 @@
-import ColorPicker from './ColorPicker'
-import './ColorPicker.css'
+import ColorPicker from './ColorPicker.component'
 
 export default ColorPicker

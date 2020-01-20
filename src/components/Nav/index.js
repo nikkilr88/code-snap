@@ -1,4 +1,3 @@
-import Nav from './Nav'
-import './Nav.css'
+import Nav from './Nav.component'
 
 export default Nav

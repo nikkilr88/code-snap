@@ -1,4 +1,3 @@
-import CodeWrapper from './CodeWrapper'
-import './CodeWrapper.css'
+import CodeWrapper from './CodeWrapper.component'
 
 export default CodeWrapper

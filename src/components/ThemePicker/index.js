@@ -1,4 +1,3 @@
-import ThemePicker from './ThemePicker'
-import './ThemePicker.css'
+import ThemePicker from './ThemePicker.component'
 
 export default ThemePicker

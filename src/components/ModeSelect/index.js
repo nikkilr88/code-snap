@@ -1,4 +1,3 @@
-import ModeSelect from './ModeSelect'
-import './ModeSelect.css'
+import ModeSelect from './ModeSelect.component'
 
 export default ModeSelect

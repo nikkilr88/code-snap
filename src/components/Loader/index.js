@@ -1,4 +1,3 @@
-import Loader from './Loader'
-import './Loader.css'
+import Loader from './Loader.component'
 
 export default Loader

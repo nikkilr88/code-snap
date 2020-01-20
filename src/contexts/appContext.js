@@ -94,7 +94,8 @@ export const AppProvider = props => {
     setUploading(true)
 
     // Capture screenshot
-    domToImage()
+    domtoimage
+      .toBlob(codeWrapper.current, generateDomToImageSettings())
       // Send blob data to backend to upload to Twitter
       .then(blob => {
         const formData = new FormData()

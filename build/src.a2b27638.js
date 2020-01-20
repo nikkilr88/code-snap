@@ -32642,7 +32642,7 @@ var AppProvider = function AppProvider(props) {
     // Set uploading to true to show spinner
     setUploading(true); // Capture screenshot
 
-    domToImage() // Send blob data to backend to upload to Twitter
+    _domToImage.default.toBlob(codeWrapper.current, generateDomToImageSettings()) // Send blob data to backend to upload to Twitter
     .then(function (blob) {
       var formData = new FormData();
       formData.append('upl', blob);
@@ -65368,7 +65368,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58248" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59579" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
